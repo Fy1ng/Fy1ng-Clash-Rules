@@ -1,0 +1,9 @@
+# 全部规则交给“自定义-直播”；示例默认 DIRECT，可改选国家组或具体节点。
+# douyucdn.cn 为斗鱼常用资源域；此处不假定覆盖所有播放、弹幕及 CDN 域名。
+# 根据客户端连接记录，把确实属于目标服务且需要同一出口的域名追加到此文件。
+DOMAIN-SUFFIX,douyu.com
+DOMAIN-SUFFIX,douyucdn.cn
+
+# 添加规则格式：
+# DOMAIN-SUFFIX,example.org
+# DOMAIN,stream.example.net

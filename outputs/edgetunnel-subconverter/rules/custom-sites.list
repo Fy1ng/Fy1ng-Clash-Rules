@@ -1,0 +1,8 @@
+# 全部规则交给“自定义-网站”；示例默认使用“自定义-日本自动”。
+# Surge/ACL4SSR 规则集语法：规则类型,匹配内容；不要在行尾填写策略组。
+# DOMAIN-SUFFIX 同时覆盖根域名和所有子域名。
+DOMAIN-SUFFIX,linux.do
+
+# 同一出口的其他网站可继续逐行添加，例如：
+# DOMAIN-SUFFIX,example.org
+# DOMAIN,api.example.net

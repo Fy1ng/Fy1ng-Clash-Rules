@@ -1,0 +1,7 @@
+* text=auto eol=lf
+*.ini text eol=lf
+*.list text eol=lf
+*.md text eol=lf
+*.py text eol=lf
+*.patch text eol=lf -whitespace
+*.zip binary
