@@ -1,4 +1,4 @@
-# EdgeTunnel / Azure 自定义 Subconverter 配置
+# Fy1ng Clash Rules
 
 在 CMLiussss 的 `CM_Online_Full` 上只插入两个 `CUSTOM` 区块。原有 **43 条 ruleset、29 个分组、全部注释和配置开关按原顺序保留**，文本统一为 UTF-8、LF。新增 12 个国家/地区自动测速组、2 个网站选择组和 2 份 `.list`。
 
@@ -12,12 +12,16 @@
 
 **开始使用**
 
-1. 将主 `.ini` 和 `rules` 目录放到能被转换后端读取的静态托管位置，例如 GitHub 仓库。保留这两个 `.list` 的文件名。
-2. 修改主 `.ini` 中的两条新增 `ruleset` 地址：将 `https://raw.githubusercontent.com/YOUR_USER/YOUR_REPO/main` 替换为你的实际 Raw 目录前缀。如果文件在仓库子目录内，前缀也要包含该目录。浏览器打开这两个完整地址时，应直接显示规则文本。
-3. 在 [sub.cmliussss.com](https://sub.cmliussss.com/) 继续填写原始 EdgeTunnel 订阅与 Azure 节点来源。生成类型保持 **Clash**，后端保持 **肥羊提供-增强型后端**；将“远程配置”改填主 `.ini` 的 Raw URL，例如 `https://raw.githubusercontent.com/你的用户名/你的仓库/main/CM_Online_Full_Custom.ini`。
-4. 重新生成长订阅链接，确认其 `config` 参数指向新 `.ini`，再生成 **v1.mk** 短链并导入客户端。旧短链如果仍引用原配置，就仍使用原配置。客户端使用规则模式，“仅输出节点信息”应关闭。
+1. 在 [sub.cmliussss.com](https://sub.cmliussss.com/) 继续填写原始 EdgeTunnel 订阅与 Azure 节点来源。生成类型保持 **Clash**，后端保持 **肥羊提供-增强型后端**。
+2. 将“远程配置”改填下面的 [INI Raw 地址](https://raw.githubusercontent.com/Fy1ng/Fy1ng-Clash-Rules/main/outputs/edgetunnel-subconverter/CM_Online_Full_Custom.ini)：
 
-这份 `.ini` 含两处托管地址占位符，替换并托管后才可供在线后端读取。本地文件路径无法直接供远程后端访问。
+   ```text
+   https://raw.githubusercontent.com/Fy1ng/Fy1ng-Clash-Rules/main/outputs/edgetunnel-subconverter/CM_Online_Full_Custom.ini
+   ```
+
+3. 重新生成长订阅链接，确认其 `config` 参数指向新 `.ini`，再生成 **v1.mk** 短链并导入客户端。旧短链如果仍引用原配置，就仍使用原配置。客户端使用规则模式，“仅输出节点信息”应关闭。
+
+主配置中的两条规则地址已指向 [Fy1ng/Fy1ng-Clash-Rules](https://github.com/Fy1ng/Fy1ng-Clash-Rules) 的 `main` 分支，可直接读取本仓库的两份 `.list`。如果以后 Fork 到其他仓库或移动文件目录，再相应修改这两个地址。
 
 **选择网站出口**
 
@@ -34,9 +38,9 @@
 
 ```ini
 ; 整份网站清单固定交给日本自动组
-ruleset=自定义-日本自动,https://raw.githubusercontent.com/YOUR_USER/YOUR_REPO/main/rules/custom-sites.list
+ruleset=自定义-日本自动,https://raw.githubusercontent.com/Fy1ng/Fy1ng-Clash-Rules/main/outputs/edgetunnel-subconverter/rules/custom-sites.list
 ; 整份直播清单固定交给某条真实存在的节点
-ruleset=Azure-HK-01,https://raw.githubusercontent.com/YOUR_USER/YOUR_REPO/main/rules/custom-media.list
+ruleset=Azure-HK-01,https://raw.githubusercontent.com/Fy1ng/Fy1ng-Clash-Rules/main/outputs/edgetunnel-subconverter/rules/custom-media.list
 ```
 
 第二种写法中的节点名必须与转换后配置里的名称完全一致，包括空格、前缀和 Emoji。节点名不稳定时，使用默认的客户端选择组更方便。

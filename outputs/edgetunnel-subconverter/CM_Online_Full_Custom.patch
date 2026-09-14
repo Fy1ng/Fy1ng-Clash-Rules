@@ -5,11 +5,11 @@
  
  ;设置规则标志位
 +; ===== CUSTOM RULES BEGIN =====
-+; 先把下面两条 URL 的 YOUR_USER / YOUR_REPO / main 改为自己的托管地址。
++; 两条规则 URL 托管于 Fy1ng/Fy1ng-Clash-Rules 仓库的 main 分支。
 +; 一个 list 中的全部规则共用同一策略组；不同出口分放到不同 list。
 +; 自定义规则排在上游所有 ruleset 之前，优先覆盖这些网站的原分流。
-+ruleset=自定义-网站,https://raw.githubusercontent.com/YOUR_USER/YOUR_REPO/main/rules/custom-sites.list
-+ruleset=自定义-直播,https://raw.githubusercontent.com/YOUR_USER/YOUR_REPO/main/rules/custom-media.list
++ruleset=自定义-网站,https://raw.githubusercontent.com/Fy1ng/Fy1ng-Clash-Rules/main/outputs/edgetunnel-subconverter/rules/custom-sites.list
++ruleset=自定义-直播,https://raw.githubusercontent.com/Fy1ng/Fy1ng-Clash-Rules/main/outputs/edgetunnel-subconverter/rules/custom-media.list
 +; ===== CUSTOM RULES END =====
 +
  ruleset=🚀 节点选择,https://raw.githubusercontent.com/cmliu/ACL4SSR/refs/heads/main/Clash/PlayStore.list
