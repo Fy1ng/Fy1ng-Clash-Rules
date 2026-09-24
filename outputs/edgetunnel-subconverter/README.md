@@ -1,100 +1,136 @@
-# Fy1ng Clash Rules
+# Fy1ng Clash Rules — 手动节点版
 
-在 CMLiussss 的 `CM_Online_Full` 上只插入两个 `CUSTOM` 区块。原有 **43 条 ruleset、29 个分组、全部注释和配置开关按原顺序保留**，文本统一为 UTF-8、LF。新增 12 个国家/地区自动测速组、2 个网站选择组和 2 份 `.list`。
+此配置基于仓库内的 `upstream/CM_Online_Full.original.ini`，保留上游 43 条 ruleset，并在其基础上加入两份自定义规则清单，同时重构策略组。
+
+## 本版行为
+
+常规自动测速已关闭。配置中不存在 `url-test` 策略组，也不存在 `♻️ 自动选择`。
+
+唯一保留的自动型策略是：
+
+```ini
+custom_proxy_group=📶 官方优选`load-balance`...
+```
+
+因此 `📶 官方优选` 仍会按原上游配置工作，并使用 `http://www.gstatic.com/generate_204` 做健康检查/负载均衡；其余国家和业务分组均由用户手动选择。
+
+
+## ⭐ 常用节点
+
+新增 `⭐ 常用节点`，类型为纯手动 `select`，不会测速。它只根据**转换后的节点名称**筛选节点，并保留 `REJECT` 作为空组保护。
+
+默认匹配范围包括：
+
+- 主流云/VPS：AWS/Amazon、Azure、GCP/Google Cloud、Oracle/OCI、Cloudflare、DigitalOcean、Vultr、Linode/Akamai、Hetzner、OVH、Scaleway、UpCloud、Leaseweb、Contabo、Netcup、RackNerd、DMIT、GreenCloud、CloudCone、BuyVM、HostHatch、Bandwagon/搬瓦工，以及腾讯云/Tencent Cloud/QCloud、阿里云/Aliyun/AliCloud/Alibaba Cloud、华为云/Huawei Cloud、百度智能云/Baidu Cloud/BCE、京东云/JDCloud、火山引擎/Volcengine/Volcano Engine/BytePlus、天翼云/CTYun/China Telecom Cloud、移动云/China Mobile Cloud/ECloud、联通云/China Unicom Cloud/Unicom Cloud/Wo Cloud、UCloud/优刻得、青云/QingCloud、七牛云/Qiniu、金山云/Kingsoft Cloud/KSCloud/Ksyun、浪潮云/Inspur Cloud、首都在线/Capital Online、白山云/Baishan Cloud、IBM Cloud。
+- AI 服务/模型标签：GrokBot、MuseAI、OpenAI/ChatGPT/Codex、Anthropic/Claude、Gemini/Google AI、xAI/Grok、DeepSeek、OpenRouter、Perplexity、Cursor、Windsurf、Copilot、Kimi/Moonshot、Qwen/通义、Zhipu/智谱、SiliconFlow/硅基流动、AgentRouter。
+
+没有使用 `AI`、`DO` 这类过短泛词，避免普通节点名称被大量误匹配。若你的机场对节点使用了其他品牌缩写，只需编辑 `CM_Online_Full_Custom.ini` 中 `custom_proxy_group=⭐ 常用节点` 这一行的正则。
+
+`⭐ 常用节点` 已加入主节点选择、各业务组以及两个自定义分流组，但不会加入国家/地区组，避免“日本组”等地区分组跳到其他国家。它都放在原有默认选项之后，因此不会改变新配置原本的默认出口。
+
+## 国家/地区组
+
+以下 12 个分组全部为 `select`：
+
+- 🇭🇰 香港节点
+- 🇹🇼 台湾节点
+- 🇸🇬 狮城节点
+- 🇯🇵 日本节点
+- 🇺🇲 美国节点
+- 🇰🇷 韩国节点
+- 🇬🇧 英国节点
+- 🇩🇪 德国节点
+- 🇫🇷 法国节点
+- 🇳🇱 荷兰节点
+- 🇨🇦 加拿大节点
+- 🇦🇺 澳大利亚节点
+
+它们仅根据转换后的节点名称做正则归类，不测速、不自动切换。每组保留 `REJECT` 作为空组保护，防止没有匹配节点时被转换器补成 `DIRECT`。
+
+节点名称建议保留 `JP`、`HK`、`US`、机场代码或明确国家名称。Cloudflare 接入点位置不等于真实出口国家，应按实际出口给节点命名。
+
+## 业务组可直接选择真实节点
+
+这些业务组末尾加入 `.*`，因此在 Clash/Mihomo 客户端中可以直接选择真实节点：
+
+- 📲 电报消息
+- 🤖 OpenAi
+- 📹 油管视频
+- 🎥 奈飞视频
+- 📺 巴哈姆特
+- 📺 哔哩哔哩
+- 🌍 国外媒体
+- 🌏 国内媒体
+- 📢 谷歌FCM
+- Ⓜ️ 微软Bing
+- Ⓜ️ 微软云盘
+- Ⓜ️ 微软服务
+- 🍎 苹果服务
+- 🎮 游戏平台
+- 🎶 网易音乐
+- 🐟 漏网之鱼
+
+例如可以分别设置：
+
+```text
+🤖 OpenAi   → Azure-US-01
+📹 油管视频 → JP-02
+📲 电报消息 → SG-01
+```
+
+这样三个业务分组彼此独立。
+
+如果业务组选择的是 `🇯🇵 日本节点` 这样的国家组，那么使用的是该国家组当前手动选中的节点；多个业务如果都引用同一个国家组，会共享该国家组的选择。需要完全独立时，直接在各业务组中选择具体真实节点。
+
+## 自定义规则
+
+自定义规则位于所有上游 ruleset 之前，因此优先命中：
+
+```ini
+ruleset=自定义-网站,.../rules/custom-sites.list
+ruleset=自定义-直播,.../rules/custom-media.list
+```
+
+当前：
+
+- `custom-sites.list`：`linux.do`、`agentrouter.org`
+- `custom-media.list`：`douyu.com`、`douyucdn.cn`
+
+`自定义-网站` 默认选择 `🇯🇵 日本节点`，但日本组内部的具体节点由你手动选择；也可在 `自定义-网站` 中直接选择某一条真实节点。
+
+`自定义-直播` 默认 `DIRECT`。
+
+## 使用
+
+在 `sub.cmliussss.com` 中保持生成类型为 Clash、后端为“肥羊提供-增强型后端”，远程配置填写：
+
+```text
+https://raw.githubusercontent.com/Fy1ng/Fy1ng-Clash-Rules/main/outputs/edgetunnel-subconverter/CM_Online_Full_Custom.ini
+```
+
+重新生成长订阅和 v1.mk 短链后导入客户端。旧短链若仍指向旧配置，不会自动切换到本版。
+
+## 文件
 
 | 文件 | 用途 |
 | --- | --- |
-| `CM_Online_Full_Custom.ini` | 填入订阅转换站“远程配置”的完整配置 |
-| `rules/custom-sites.list` | 常用网站；初始包含 `linux.do` |
-| `rules/custom-media.list` | 直播网站；初始包含 `douyu.com`、`douyucdn.cn` |
-| `upstream/CM_Online_Full.original.ini` | 本次使用的上游原文，便于核对 |
-| `CM_Online_Full_Custom.patch` | 相对上游的增量对照，仅含新增行 |
+| `CM_Online_Full_Custom.ini` | 当前完整远程配置 |
+| `CM_Online_Full_Custom.patch` | 相对上游快照的差异 |
+| `rules/custom-sites.list` | 自定义网站 |
+| `rules/custom-media.list` | 自定义直播 |
+| `upstream/CM_Online_Full.original.ini` | 上游快照 |
 
-**开始使用**
+## 静态校验
 
-1. 在 [sub.cmliussss.com](https://sub.cmliussss.com/) 继续填写原始 EdgeTunnel 订阅与 Azure 节点来源。生成类型保持 **Clash**，后端保持 **肥羊提供-增强型后端**。
-2. 将“远程配置”改填下面的 [INI Raw 地址](https://raw.githubusercontent.com/Fy1ng/Fy1ng-Clash-Rules/main/outputs/edgetunnel-subconverter/CM_Online_Full_Custom.ini)：
+本次打包执行了以下检查：
 
-   ```text
-   https://raw.githubusercontent.com/Fy1ng/Fy1ng-Clash-Rules/main/outputs/edgetunnel-subconverter/CM_Online_Full_Custom.ini
-   ```
+- 活跃上游 ruleset 为 43 条，自定义 ruleset 为 2 条。
+- 总策略组为 37 个。
+- 不存在任何 `url-test` 策略组。
+- 不存在 `♻️ 自动选择` 的定义或引用。
+- 仅存在一个 `load-balance` 策略组，即 `📶 官方优选`。
+- 12 个国家/地区组均为 `select`。
+- `⭐ 常用节点` 为 `select`，并使用名称正则筛选节点。
+- `🤖 OpenAi` 等业务组均带 `.*`，可直接列出真实节点。
 
-3. 重新生成长订阅链接，确认其 `config` 参数指向新 `.ini`，再生成 **v1.mk** 短链并导入客户端。旧短链如果仍引用原配置，就仍使用原配置。客户端使用规则模式，“仅输出节点信息”应关闭。
-
-主配置中的两条规则地址已指向 [Fy1ng/Fy1ng-Clash-Rules](https://github.com/Fy1ng/Fy1ng-Clash-Rules) 的 `main` 分支，可直接读取本仓库的两份 `.list`。如果以后 Fork 到其他仓库或移动文件目录，再相应修改这两个地址。
-
-**选择网站出口**
-
-| 网站规则 | 客户端选择组 | 首次默认值 |
-| --- | --- | --- |
-| `linux.do` 及其子域名 | `自定义-网站` | `自定义-日本自动` |
-| `douyu.com`、`douyucdn.cn` 及其子域名 | `自定义-直播` | `DIRECT` |
-
-在这两个 `select` 组内，可以选择任一新增国家自动组，也可以直接选择某一条 EdgeTunnel / Azure 节点。选择具体节点后，该网站组就固定使用该节点；选择国家组后，由该国家组自动测速选优。两组互不影响。
-
-默认值是示例，可在客户端随时切换。要改变新导入配置的默认值，把对应 `custom_proxy_group=自定义-网站` 或 `custom_proxy_group=自定义-直播` 行中希望使用的 `[]选项` 移到最前面。客户端可能记住已有的手动选择，更新订阅不会一定重置它。
-
-也可以只修改新增的 `ruleset` 行，直接指定固定目标，例如：
-
-```ini
-; 整份网站清单固定交给日本自动组
-ruleset=自定义-日本自动,https://raw.githubusercontent.com/Fy1ng/Fy1ng-Clash-Rules/main/outputs/edgetunnel-subconverter/rules/custom-sites.list
-; 整份直播清单固定交给某条真实存在的节点
-ruleset=Azure-HK-01,https://raw.githubusercontent.com/Fy1ng/Fy1ng-Clash-Rules/main/outputs/edgetunnel-subconverter/rules/custom-media.list
-```
-
-第二种写法中的节点名必须与转换后配置里的名称完全一致，包括空格、前缀和 Emoji。节点名不稳定时，使用默认的客户端选择组更方便。
-
-**维护少量 `.list`**
-
-使用 Surge / ACL4SSR 规则集语法，一个文件内可以放多条规则；同一文件的全部规则共用它在 `.ini` 中绑定的出口。例如：
-
-```text
-# 同一出口的多个网站
-DOMAIN-SUFFIX,linux.do
-DOMAIN-SUFFIX,example.org
-DOMAIN,api.example.net
-```
-
-`DOMAIN-SUFFIX` 同时匹配根域名和子域名，`DOMAIN` 只匹配指定主机。`.list` 中不要添加 `payload:`，不要在每行末尾添加国家组或节点名。不同出口的网站放入不同清单；若确需第三种独立策略，再增加一份 `.list` 及其 `ruleset` 即可。
-
-两条自定义 `ruleset` 已放在上游所有规则之前，因此会优先命中，包括优先于原来的广告、国内媒体、直连和 GEOIP 规则。只对清单覆盖的域名产生这个优先覆盖效果。两份清单不要重复添加同一个域名；有重叠时，前面的规则优先。
-
-斗鱼示例包含一个常用资源域，未宣称覆盖所有播放、弹幕或第三方 CDN。需要时，根据客户端连接记录，把确认属于目标服务且需要同一出口的域名追加到相应清单。修改清单后需要更新客户端订阅，生效时间还受托管端和转换后端缓存影响。
-
-**国家识别与测速**
-
-已配置：香港、台湾、新加坡、日本、美国、韩国、英国、德国、法国、荷兰、加拿大、澳大利亚。每个新增 `自定义-…自动` 组都是独立 `url-test`，探测地址沿用上游的 `http://www.gstatic.com/generate_204`，间隔 300 秒，切换容差 0ms。客户端会依据最近的探测结果选择可用节点中的最低延迟者；这衡量探测地址延迟，不代表下载带宽或所有网站的访问速度。
-
-名称匹配支持常见中文/英文名称、国旗、国家代码及部分机场代码，并忽略英文大小写。短代码带字母边界，例如 `Azure-JP-01`、`HK01`、`EdgeTunnel-LAX-02` 可以识别，`AUS` 和 `RUS` 不会因为含有 `US` 而混入美国组。`FRA` 按法兰克福识别为德国。
-
-匹配针对**转换后端处理后的节点名称**。后端可能移除或重建名称开头的国旗，因此建议始终保留 `JP`、`HK` 等文本标记。名称没有地区标记时，静态 `.ini` 无法判断国家；该节点仍会出现在两个网站组的具体节点选项中。名称同时写了多个国家也可能匹配多组，建议按最终出口统一命名。
-
-Cloudflare 的接入 POP、优选 IP 位置与 Azure 的实际出口国家可能不同。请按期望分类的真实出口命名；本配置不通过 IP 查询或实际连通测试推断出口国家。
-
-每个新增自动组末尾的 `[]REJECT` 是空组保护：没有匹配节点时，该组只包含 `REJECT`，避免转换器默认补入 `DIRECT`。因此使用默认日本组前，请确认订阅中有被识别为日本的可用节点；否则改选已有国家组或具体节点。有可用真实节点时，`REJECT` 不会成为成功的测速候选。
-
-上游原有 6 个地区测速组保留原名和 50–150ms 容差；新增组使用 `自定义-` 前缀，并采用 0ms 容差。原有业务组继续保持上游行为。Subconverter 在输出 YAML 时可能省略数值为 0 的 `tolerance` 字段，Clash/Mihomo 的该字段默认值为 0。
-
-静态 INI 需要为各国家显式声明分组，不会自动为新出现的国家创建组。若有其他国家，可仿照新增组增加一行，并把 `[]新组名` 加入两个网站选择组的选项。
-
-**上游更新与来源**
-
-本文件基于 2026-09-14 获取的 [CMLiu 原配置](https://raw.githubusercontent.com/cmliu/ACL4SSR/main/Clash/config/ACL4SSR_Online_Full.ini)，该文件最近一次提交为 [0efb438c6d6203025ab659f582ffb1bef14c2bc8](https://github.com/cmliu/ACL4SSR/commit/0efb438c6d6203025ab659f582ffb1bef14c2bc8)，提交时间 2026-07-02。此提交的原始文件与本次获取的 main 版本 SHA-256 相同：`84d8b81906526feeef855b01d38102b10adc157fcf6f63c98cd74707bc081ebf`。包内原文只做了 LF 换行规范化。
-
-自定义 `.ini` 是该版本的快照。它保留了上游全部远程 `.list` 引用，这些规则内容仍由原地址维护；但上游以后调整分组或增删 `ruleset`，不会自动合并进你的 `.ini`。更新时获取新上游，对照本包 `.patch` 将两个 `CUSTOM` 区块合入，再核对差异即可。单独选择一份自定义外部配置也不会自动继承另一份远程 `.ini`。
-
-配置及原有规则来自对应上游作者；原有注释和来源均已保留，许可条件以源仓库的声明为准。
-
-- [Subconverter 官方外部配置与规则集语法](https://github.com/tindy2013/subconverter/blob/master/README-cn.md)
-- [斗鱼域名清单参考](https://github.com/blackmatrix7/ios_rule_script/blob/master/rule/Clash/Douyu/Douyu.list)
-- [Mihomo URL-test 实现](https://github.com/MetaCubeX/mihomo/blob/v1.19.30/adapter/outboundgroup/urltest.go)
-
-**已执行的验证**
-
-- 增量比对：去除两个 `CUSTOM` 区块后，与上游规范化原文完全一致；43 条规则集引用与 29 个分组的顺序和内容保持一致。
-- 实际转换：标准 Subconverter v0.9.0、增强开源版 asdlokj1qpi233/subconverter v0.9.9 均通过。覆盖 49 个正向节点名称、6 个易误匹配名称、12 个国家组、网站规则优先级、固定节点可选、分组引用与无循环检查；生成结果中原有分组、规则和节点数据保持一致。
-- 空组检查：仅有一个日本节点时，其余新增国家组均为 `REJECT`，未自动变成 `DIRECT`。
-- 内核检查：Mihomo v1.19.30 的 `-t` 检查接受增强版生成的完整及单地区节点配置。
-
-转换测试使用虚构节点和本地规则夹具，国旗测试显式保留 Emoji；没有使用你的真实订阅，也未测试实际出口、网站连通性或真实延迟。在线肥羊 `/version` 当次返回 `subconverter v1.9.9 TG@feiyangdigital backend`，本地测试版本与该部署的版本标识不同，不能据此宣称已完成在线后端联调。
+此处是静态配置校验，不等同于使用真实订阅对在线转换后端和 Mihomo 内核做完整联调。
