@@ -1,0 +1,37 @@
+# Bybit EU：独立交给 Bybit EU 策略组；2026-09-30 核查。
+# 核心域名覆盖官网、登录、API、WebSocket、静态资源、公告、帮助和推广等所有子域名。
+DOMAIN-SUFFIX,bybit.eu
+
+# 登录/注册和现货交易页面中观察到的共享静态资源。
+DOMAIN,fh-static.bycsi.com
+
+# 登录/注册页面的极验验证码；精确匹配，避免整个第三方根域名分流。
+DOMAIN,api.geetest.com
+DOMAIN,static.geetest.com
+DOMAIN,gcaptcha4.geetest.com
+
+# 安全/风控数据与前端监控（页面及 monitor.latest.js）。
+DOMAIN,sc-datasink.ffbbbdc6d3c353211fe2ba39c9f744cd.com
+DOMAIN,monitor-frontend-collector.ffbbbdc6d3c353211fe2ba39c9f744cd.com
+DOMAIN,monitor-frontend-collector.byoresvc.com
+
+# 官网提供的 Google / Apple 登录及字体资源。
+# 以下共享主机在其他网站上的请求也会命中此组。
+DOMAIN,accounts.google.com
+DOMAIN,appleid.apple.com
+DOMAIN,appleid.cdn-apple.com
+DOMAIN,fonts.gstatic.com
+
+# 官网页面加载的统计/归因脚本。
+DOMAIN,websdk.appsflyersdk.com
+DOMAIN,www.googletagmanager.com
+DOMAIN,www.google-analytics.com
+DOMAIN,wcs.naver.net
+
+# 官方 API 文档及文档明确列出的 PSD2 XS2A 沙箱。
+DOMAIN,bybit-exchange.github.io
+DOMAIN,bybit-xs2a-sandbox.finapi.io
+
+# 未泛匹配 bybit.com / bytick.com、google.com、apple.com、CDN 云平台根域名。
+# 外链不等于 EU 业务依赖；登录后的 KYC/支付服务和 App 专属端点需连接日志补充。
+# 来源和覆盖限制见同目录上级 README.md 的 Bybit EU 章节。

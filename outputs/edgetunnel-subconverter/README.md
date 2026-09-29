@@ -1,6 +1,6 @@
 # Fy1ng Clash Rules — 手动节点版
 
-此配置基于仓库内的 `upstream/CM_Online_Full.original.ini`，保留上游 43 条 ruleset，并在其基础上加入两份自定义规则清单，同时重构策略组。
+此配置基于仓库内的 `upstream/CM_Online_Full.original.ini`，保留上游 43 条 ruleset，并在其基础上加入四份自定义规则清单，同时重构策略组。
 
 ## 本版行为
 
@@ -26,7 +26,7 @@ custom_proxy_group=📶 官方优选`load-balance`...
 
 没有使用 `AI`、`DO` 这类过短泛词，避免普通节点名称被大量误匹配。若你的机场对节点使用了其他品牌缩写，只需编辑 `CM_Online_Full_Custom.ini` 中 `custom_proxy_group=⭐ 常用节点` 这一行的正则。
 
-`⭐ 常用节点` 已加入主节点选择、各业务组以及两个自定义分流组，但不会加入国家/地区组，避免“日本组”等地区分组跳到其他国家。它都放在原有默认选项之后，因此不会改变新配置原本的默认出口。
+`⭐ 常用节点` 已加入主节点选择、各业务组以及四个自定义分流组，但不会加入国家/地区组，避免“日本组”等地区分组跳到其他国家。它都放在原有默认选项之后，因此不会改变新配置原本的默认出口。
 
 ## 国家/地区组
 
@@ -89,16 +89,38 @@ custom_proxy_group=📶 官方优选`load-balance`...
 ```ini
 ruleset=自定义-网站,.../rules/custom-sites.list
 ruleset=自定义-直播,.../rules/custom-media.list
+ruleset=Any,.../rules/any.list
+ruleset=Bybit EU,.../rules/bybit-eu.list
 ```
 
 当前：
 
 - `custom-sites.list`：`linux.do`、`agentrouter.org`
 - `custom-media.list`：`douyu.com`、`douyucdn.cn`
+- `any.list`：`anyrouter.top` 及全部子域名，独立 `Any` 组，默认日本。
+- `bybit-eu.list`：`bybit.eu` 及全部子域名和已核实的外部依赖，独立 `Bybit EU` 组，默认德国。
 
 `自定义-网站` 默认选择 `🇯🇵 日本节点`，但日本组内部的具体节点由你手动选择；也可在 `自定义-网站` 中直接选择某一条真实节点。
 
 `自定义-直播` 默认 `DIRECT`。
+
+## Bybit EU 覆盖与来源
+
+核查日期：2026-09-30。核心规则 `DOMAIN-SUFFIX,bybit.eu` 覆盖根域名及任意层级子域名，包括 `www`、`api`、`stream`、`static`、`announcements`、`affiliates` 等，无须逐个列出。
+
+同时覆盖公开页面中发现的共享静态资源、极验验证码、风控和监控主机、Google/Apple 登录资源、统计脚本，以及官方 API 文档和 PSD2 沙箱。共享服务使用 `DOMAIN` 精确匹配；这些主机在其他网站上被使用时也会进入 `Bybit EU` 组，Clash 域名规则无法按发起网页区分。
+
+来源：
+
+- [官网](https://www.bybit.eu/en-EU)、[登录](https://www.bybit.eu/en-EU/login)、[注册](https://www.bybit.eu/en-EU/register)、[现货交易](https://www.bybit.eu/en-EU/trade/spot/BTC/EUR)：公开 HTML 的脚本、资源和预连接地址。
+- [前端监控脚本](https://www.bybit.eu/common-static/infra-static/monitor/monitor.latest.js)：生产监控主机；排除 SIT 测试域名。
+- [官方 API 接入说明](https://bybit-exchange.github.io/docs/v5/guide)：EU API 使用 `api.bybit.eu`。
+- [EU PSD2 文档](https://bybit-exchange.github.io/eu-docs/fin)：`bybit-xs2a-sandbox.finapi.io`。
+- `appleid.apple.com` 是 Apple 登录配套端点，页面已核实加载 `appleid.cdn-apple.com` 登录 SDK；前者作为该登录方式的补充。
+
+未将页脚中的全球站、其他地区站、社交媒体外链或整个 Google/Apple/CDN 根域名纳入。核心 EU 域名的所有子域名均已覆盖，但公开页面核查无法保证穷尽登录后的 KYC、支付及 App 专属第三方端点；遇到遗漏可按客户端连接日志补充精确主机。也不通过固定 IP 规则匹配会变化且可能共享的 CDN 地址。
+
+两个新组都是独立手动 `select`，支持地区组、常用节点、DIRECT 和任意真实节点。
 
 ## 使用
 
@@ -118,14 +140,16 @@ https://raw.githubusercontent.com/Fy1ng/Fy1ng-Clash-Rules/main/outputs/edgetunne
 | `CM_Online_Full_Custom.patch` | 相对上游快照的差异 |
 | `rules/custom-sites.list` | 自定义网站 |
 | `rules/custom-media.list` | 自定义直播 |
+| `rules/any.list` | AnyRouter 独立分流 |
+| `rules/bybit-eu.list` | Bybit EU 独立分流 |
 | `upstream/CM_Online_Full.original.ini` | 上游快照 |
 
 ## 静态校验
 
 本次打包执行了以下检查：
 
-- 活跃上游 ruleset 为 43 条，自定义 ruleset 为 2 条。
-- 总策略组为 37 个。
+- 活跃上游 ruleset 为 43 条，自定义 ruleset 为 4 条。
+- 总策略组为 39 个。
 - 不存在任何 `url-test` 策略组。
 - 不存在 `♻️ 自动选择` 的定义或引用。
 - 仅存在一个 `load-balance` 策略组，即 `📶 官方优选`。

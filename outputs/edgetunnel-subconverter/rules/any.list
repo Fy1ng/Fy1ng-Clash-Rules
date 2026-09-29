@@ -1,0 +1,3 @@
+# Any：根域名及所有子域名，独立交给 Any 策略组。
+# DOMAIN-SUFFIX 同时匹配根域名及任意层级子域名。
+DOMAIN-SUFFIX,anyrouter.top

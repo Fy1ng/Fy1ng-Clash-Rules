@@ -1,6 +1,6 @@
---- CM_Online_Full.original.ini
+--- upstream/CM_Online_Full.original.ini
 +++ CM_Online_Full_Custom.ini
-@@ -3,13 +3,21 @@
+@@ -3,13 +3,23 @@
  ;acl4SSR规则
  
  ;去广告：支持
@@ -13,17 +13,19 @@
  
  ;设置规则标志位
 +; ===== CUSTOM RULES BEGIN =====
-+; 两条规则 URL 托管于 Fy1ng/Fy1ng-Clash-Rules 仓库的 main 分支。
++; 四条规则 URL 托管于 Fy1ng/Fy1ng-Clash-Rules 仓库的 main 分支。
 +; 一个 list 中的全部规则共用同一策略组；不同出口分放到不同 list。
 +; 自定义规则排在上游所有 ruleset 之前，优先覆盖这些网站的原分流。
 +ruleset=自定义-网站,https://raw.githubusercontent.com/Fy1ng/Fy1ng-Clash-Rules/main/outputs/edgetunnel-subconverter/rules/custom-sites.list
 +ruleset=自定义-直播,https://raw.githubusercontent.com/Fy1ng/Fy1ng-Clash-Rules/main/outputs/edgetunnel-subconverter/rules/custom-media.list
++ruleset=Any,https://raw.githubusercontent.com/Fy1ng/Fy1ng-Clash-Rules/main/outputs/edgetunnel-subconverter/rules/any.list
++ruleset=Bybit EU,https://raw.githubusercontent.com/Fy1ng/Fy1ng-Clash-Rules/main/outputs/edgetunnel-subconverter/rules/bybit-eu.list
 +; ===== CUSTOM RULES END =====
 +
  ruleset=🚀 节点选择,https://raw.githubusercontent.com/cmliu/ACL4SSR/refs/heads/main/Clash/PlayStore.list
  ruleset=🎯 全球直连,https://raw.githubusercontent.com/cmliu/ACL4SSR/refs/heads/main/Clash/CFnat.list
  ruleset=🎯 全球直连,https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/LocalAreaNetwork.list
-@@ -58,35 +66,57 @@
+@@ -58,35 +68,59 @@
  ;设置规则标志位
  
  ;设置分组标志位
@@ -98,10 +100,12 @@
 +; ===== MANUAL COUNTRY GROUPS END =====
 +
 +; ===== CUSTOM GROUPS BEGIN =====
-+; 自定义网站/直播组同样是手动 select，可选国家组，也可直接选择真实节点。
++; 自定义网站/直播、Any、Bybit EU 组同样是手动 select，可选国家组，也可直接选择真实节点。
 +; 第一个选项为新配置首次导入时的默认值；客户端可能保留旧的手动选择。
 +custom_proxy_group=自定义-网站`select`[]🇯🇵 日本节点`[]⭐ 常用节点`[]🇭🇰 香港节点`[]🇹🇼 台湾节点`[]🇸🇬 狮城节点`[]🇺🇲 美国节点`[]🇰🇷 韩国节点`[]🇬🇧 英国节点`[]🇩🇪 德国节点`[]🇫🇷 法国节点`[]🇳🇱 荷兰节点`[]🇨🇦 加拿大节点`[]🇦🇺 澳大利亚节点`[]🚀 节点选择`[]DIRECT`.*
 +custom_proxy_group=自定义-直播`select`[]DIRECT`[]⭐ 常用节点`[]🇭🇰 香港节点`[]🇹🇼 台湾节点`[]🇸🇬 狮城节点`[]🇯🇵 日本节点`[]🇺🇲 美国节点`[]🇰🇷 韩国节点`[]🇬🇧 英国节点`[]🇩🇪 德国节点`[]🇫🇷 法国节点`[]🇳🇱 荷兰节点`[]🇨🇦 加拿大节点`[]🇦🇺 澳大利亚节点`[]🚀 节点选择`.*
++custom_proxy_group=Any`select`[]🇯🇵 日本节点`[]⭐ 常用节点`[]🇭🇰 香港节点`[]🇹🇼 台湾节点`[]🇸🇬 狮城节点`[]🇺🇲 美国节点`[]🇰🇷 韩国节点`[]🇬🇧 英国节点`[]🇩🇪 德国节点`[]🇫🇷 法国节点`[]🇳🇱 荷兰节点`[]🇨🇦 加拿大节点`[]🇦🇺 澳大利亚节点`[]🚀 节点选择`[]DIRECT`.*
++custom_proxy_group=Bybit EU`select`[]🇩🇪 德国节点`[]⭐ 常用节点`[]🇭🇰 香港节点`[]🇹🇼 台湾节点`[]🇸🇬 狮城节点`[]🇺🇲 美国节点`[]🇰🇷 韩国节点`[]🇬🇧 英国节点`[]🇯🇵 日本节点`[]🇫🇷 法国节点`[]🇳🇱 荷兰节点`[]🇨🇦 加拿大节点`[]🇦🇺 澳大利亚节点`[]🚀 节点选择`[]DIRECT`.*
 +; ===== CUSTOM GROUPS END =====
  ;设置分组标志位
  
