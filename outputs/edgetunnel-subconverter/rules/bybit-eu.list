@@ -15,19 +15,6 @@ DOMAIN,sc-datasink.ffbbbdc6d3c353211fe2ba39c9f744cd.com
 DOMAIN,monitor-frontend-collector.ffbbbdc6d3c353211fe2ba39c9f744cd.com
 DOMAIN,monitor-frontend-collector.byoresvc.com
 
-# 官网提供的 Google / Apple 登录及字体资源。
-# 以下共享主机在其他网站上的请求也会命中此组。
-DOMAIN,accounts.google.com
-DOMAIN,appleid.apple.com
-DOMAIN,appleid.cdn-apple.com
-DOMAIN,fonts.gstatic.com
-
-# 官网页面加载的统计/归因脚本。
-DOMAIN,websdk.appsflyersdk.com
-DOMAIN,www.googletagmanager.com
-DOMAIN,www.google-analytics.com
-DOMAIN,wcs.naver.net
-
 # 官方 API 文档及文档明确列出的 PSD2 XS2A 沙箱。
 DOMAIN,bybit-exchange.github.io
 DOMAIN,bybit-xs2a-sandbox.finapi.io
