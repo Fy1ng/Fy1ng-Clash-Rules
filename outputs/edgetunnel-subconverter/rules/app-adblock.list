@@ -1,0 +1,7 @@
+# 精准应用开屏广告拦截
+# 当前用于 5EPlay / Oopz；只收录已确认的领页开屏广告请求域名。
+# 保持精确 DOMAIN 匹配，避免扩大到共享广告 SDK 根域名后影响应用正常启动。
+# Surge/ACL4SSR 规则集语法：规则类型,匹配内容；策略组由远程配置统一指定为“🛑 广告拦截”。
+
+DOMAIN,api.shanghailingye.cn
+DOMAIN,api.wxcjgg.cn
