@@ -101,6 +101,7 @@ ruleset=🛑 广告拦截,.../rules/app-adblock.list
 - `any.list`：`anyrouter.top` 及全部子域名，独立 `Any` 组，默认日本。
 - `bybit-eu.list`：`bybit.eu` 及全部子域名和已核实的外部依赖，独立 `Bybit EU` 组，默认德国。
 - `app-adblock.list`：5EPlay / Oopz 已确认的领页开屏广告域名，使用现有 `🛑 广告拦截` 组；仅做精确 `DOMAIN` 匹配，避免扩大拦截范围影响应用启动。
+  - 该列表仅作为普通 Subconverter 配置的基础拦截。由于两个 App 都会切换/缓存下游广告 SDK，Android FlClash 推荐改用 [`../flclash/app-adblock-override.js`](../flclash/app-adblock-override.js) 的 `PROCESS-NAME + DOMAIN` 精准覆写。
 
 `自定义-网站` 默认选择 `🇯🇵 日本节点`，但日本组内部的具体节点由你手动选择；也可在 `自定义-网站` 中直接选择某一条真实节点。
 
