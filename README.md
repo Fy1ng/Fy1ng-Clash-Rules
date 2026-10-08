@@ -26,6 +26,7 @@ https://raw.githubusercontent.com/Fy1ng/Fy1ng-Clash-Rules/main/outputs/edgetunne
 - [Any 规则](outputs/edgetunnel-subconverter/rules/any.list)
 - [Bybit EU 规则](outputs/edgetunnel-subconverter/rules/bybit-eu.list)
 - [应用开屏广告规则（5EPlay / Oopz）](outputs/edgetunnel-subconverter/rules/app-adblock.list)
+- [FlClash 精准开屏广告覆写（推荐）](outputs/flclash/app-adblock-override.js) — 按 Android 包名限定，仅拦 5EPlay / Oopz 的广告 SDK
 - [完整配置包](outputs/edgetunnel-subconverter.zip)
 
 节点连接信息由用户自己的订阅提供。
