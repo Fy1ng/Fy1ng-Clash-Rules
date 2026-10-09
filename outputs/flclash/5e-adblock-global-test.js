@@ -4,6 +4,8 @@
 
 function main(config) {
   const rules = [
+    // 哨兵：用于确认脚本本身是否已应用。测试时访问 https://example.com 应被 REJECT。
+    ["DOMAIN", "example.com"],
     ["DOMAIN", "sdk.e.qq.com"],
     ["DOMAIN", "sdkquic.e.qq.com"],
     ["DOMAIN", "c2.gdt.qq.com"],
