@@ -4,7 +4,7 @@
 // 注意：规则必须前置；脚本会把这些规则插到原订阅 rules 最前面。
 
 function main(config) {
-  const pkg = "com.fiveplay.sihz";
+  const pkg = "com.fiveplay";
 
   // 严格按最初实测有效规则恢复，不再自行缩减。
   const rules = [
