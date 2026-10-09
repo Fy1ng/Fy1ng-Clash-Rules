@@ -1,12 +1,9 @@
-// FlClash / Mihomo — 5EPlay 精准开屏广告覆写
-// 目标：完整复刻“最初实测可去除 5E 开屏广告”的规则，但仅作用于 5EPlay 进程。
-// Oopz 不再做网络层广告拦截：它的启动流程依赖开屏广告状态机，网络 REJECT 可能导致无法进入。
-// 注意：规则必须前置；脚本会把这些规则插到原订阅 rules 最前面。
+// FlClash / Mihomo — 5EPlay 开屏广告拦截
+// 已实测：当前 FlClash Android 环境中 PROCESS-NAME 条件未可靠命中，
+// 因此生产版使用全局广告域名规则。
+// 注意：这些域名属于共享广告平台，可能同时影响其他 App 的广告请求。
 
 function main(config) {
-  const pkg = "com.fiveplay";
-
-  // 严格按最初实测有效规则恢复，不再自行缩减。
   const rules = [
     // 腾讯优量汇 / GDT
     ["DOMAIN", "sdk.e.qq.com"],
@@ -67,16 +64,12 @@ function main(config) {
     ["DOMAIN", "c.etoolads.cn"],
     ["DOMAIN", "nova-api.smartroi.cn"],
 
-    // 快手广告链路（最初规则中明确存在）
+    // 快手广告链路
     ["DOMAIN", "v1-lm.adukwai.com"],
   ];
 
-  const preciseRules = rules.map(
-    ([type, value]) =>
-      `AND,((PROCESS-NAME,${pkg}),(${type},${value})),REJECT`
-  );
-
+  const globalRules = rules.map(([type, value]) => `${type},${value},REJECT`);
   const originalRules = Array.isArray(config.rules) ? config.rules : [];
-  config.rules = [...preciseRules, ...originalRules];
+  config.rules = [...globalRules, ...originalRules];
   return config;
 }
