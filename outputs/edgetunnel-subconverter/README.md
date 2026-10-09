@@ -1,6 +1,6 @@
 # Fy1ng Clash Rules — 手动节点版
 
-此配置基于仓库内的 `upstream/CM_Online_Full.original.ini`，保留上游 43 条 ruleset，并在其基础上加入五份自定义规则清单，同时重构策略组。
+此配置基于仓库内的 `upstream/CM_Online_Full.original.ini`，保留上游 43 条 ruleset，并在其基础上加入六份自定义规则清单，同时重构策略组。
 
 ## 本版行为
 
@@ -92,6 +92,7 @@ ruleset=自定义-直播,.../rules/custom-media.list
 ruleset=Any,.../rules/any.list
 ruleset=Bybit EU,.../rules/bybit-eu.list
 ruleset=Cloudflare 验证,.../rules/cloudflare-challenge.list
+ruleset=🛑 广告拦截,.../rules/app-adblock.list
 ```
 
 当前：
@@ -101,6 +102,7 @@ ruleset=Cloudflare 验证,.../rules/cloudflare-challenge.list
 - `any.list`：`anyrouter.top` 及全部子域名，独立 `Any` 组，默认日本。
 - `bybit-eu.list`：`bybit.eu` 及全部子域名和已核实的外部依赖，独立 `Bybit EU` 组，默认德国。
 - `cloudflare-challenge.list`：精确匹配 `challenges.cloudflare.com`，独立 `Cloudflare 验证` 组，默认跟随 `🚀 节点选择`。
+- `app-adblock.list`：5EPlay 开屏广告实测有效的广告平台域名，进入现有 `🛑 广告拦截` 组；为全局域名规则。
 
 `自定义-网站` 默认选择 `🇯🇵 日本节点`，但日本组内部的具体节点由你手动选择；也可在 `自定义-网站` 中直接选择某一条真实节点。
 
@@ -134,7 +136,7 @@ Cloudflare 官方文档：[Turnstile 资源主机与 CSP](https://developers.clo
 
 ## 5EPlay 开屏广告
 
-5EPlay 的开屏广告改由 [`../flclash/app-adblock-override.js`](../flclash/app-adblock-override.js) 处理。该脚本完整恢复最初实测有效的广告域名集合，并用 Android 包名 `com.fiveplay.sihz` 限定作用范围。Oopz 不使用网络层广告拦截。
+5EPlay 的开屏广告直接由 `rules/app-adblock.list` 处理，不再依赖 FlClash JS 覆写。该列表恢复已经实测有效的完整广告域名集合，并进入现有 `🛑 广告拦截` 组。由于普通 Clash ruleset 无法按 Android 应用进程限定，这些规则对所有应用全局生效。
 
 ## 使用
 
@@ -157,13 +159,14 @@ https://raw.githubusercontent.com/Fy1ng/Fy1ng-Clash-Rules/main/outputs/edgetunne
 | `rules/any.list` | AnyRouter 独立分流 |
 | `rules/bybit-eu.list` | Bybit EU 独立分流 |
 | `rules/cloudflare-challenge.list` | Cloudflare 人机验证独立分流 |
+| `rules/app-adblock.list` | 5EPlay 开屏广告全局拦截 |
 | `upstream/CM_Online_Full.original.ini` | 上游快照 |
 
 ## 静态校验
 
 本次打包执行了以下检查：
 
-- 活跃上游 ruleset 为 43 条，自定义 ruleset 为 5 条。
+- 活跃上游 ruleset 为 43 条，自定义 ruleset 为 6 条。
 - 总策略组为 40 个。
 - 不存在任何 `url-test` 策略组。
 - 不存在 `♻️ 自动选择` 的定义或引用。
