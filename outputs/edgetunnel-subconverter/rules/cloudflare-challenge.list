@@ -1,0 +1,5 @@
+# Cloudflare Turnstile / 人机验证资源，独立交给 Cloudflare 验证策略组。
+# 仅匹配 Cloudflare 官方验证资源主机；不扩大到 cloudflare.com 全域。
+# 受 Cloudflare 保护的网站可能在自身域名下使用 /cdn-cgi/challenge-platform/，
+# 该路径无法用普通 Clash 域名规则单独分流，仍跟随原网站的规则。
+DOMAIN,challenges.cloudflare.com

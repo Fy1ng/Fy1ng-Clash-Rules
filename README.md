@@ -2,7 +2,7 @@
 
 基于 CMLiussss `CM_Online_Full` 的 EdgeTunnel / Azure Subconverter 配置。
 
-当前版本保留上游 43 条 ruleset，并新增四份自定义规则清单；策略组改为“手动优先”：
+当前版本保留上游 43 条 ruleset，并新增五份自定义规则清单；策略组改为“手动优先”：
 
 - 取消 `♻️ 自动选择` 及全部国家/地区 `url-test`。
 - 保留 `📶 官方优选` 的 `load-balance`。
@@ -10,6 +10,7 @@
 - 香港、台湾、新加坡、日本、美国、韩国、英国、德国、法国、荷兰、加拿大、澳大利亚共 12 个国家/地区组均为手动 `select`。
 - OpenAI、Telegram、YouTube、Netflix、微软、Apple、游戏、媒体等业务组可直接选择任意真实节点，不必先进入 `☑️ 手动切换`。
 - 新增独立 `Any`（anyrouter.top 及全部子域名，默认日本）和 `Bybit EU`（EU 域名及已核实的外部依赖，默认德国）手动分组。
+- 新增 `Cloudflare 验证` 独立手动分组：仅匹配 `challenges.cloudflare.com`，默认跟随 `🚀 节点选择`，可单独指定出口。
 - `自定义-网站` 默认进入 `🇯🇵 日本节点`；`自定义-直播` 默认 `DIRECT`。
 
 在 [订阅转换站](https://sub.cmliussss.com/) 的“远程配置”中填写：
@@ -25,6 +26,7 @@ https://raw.githubusercontent.com/Fy1ng/Fy1ng-Clash-Rules/main/outputs/edgetunne
 - [直播网站清单](outputs/edgetunnel-subconverter/rules/custom-media.list)
 - [Any 规则](outputs/edgetunnel-subconverter/rules/any.list)
 - [Bybit EU 规则](outputs/edgetunnel-subconverter/rules/bybit-eu.list)
+- [Cloudflare 人机验证规则](outputs/edgetunnel-subconverter/rules/cloudflare-challenge.list)
 - [FlClash 5EPlay 精准开屏广告覆写（推荐）](outputs/flclash/app-adblock-override.js) — 完整恢复最初实测有效规则，并仅作用于 5EPlay
 - [完整配置包](outputs/edgetunnel-subconverter.zip)
 

@@ -1,6 +1,6 @@
 # Fy1ng Clash Rules — 手动节点版
 
-此配置基于仓库内的 `upstream/CM_Online_Full.original.ini`，保留上游 43 条 ruleset，并在其基础上加入四份自定义规则清单，同时重构策略组。
+此配置基于仓库内的 `upstream/CM_Online_Full.original.ini`，保留上游 43 条 ruleset，并在其基础上加入五份自定义规则清单，同时重构策略组。
 
 ## 本版行为
 
@@ -91,6 +91,7 @@ ruleset=自定义-网站,.../rules/custom-sites.list
 ruleset=自定义-直播,.../rules/custom-media.list
 ruleset=Any,.../rules/any.list
 ruleset=Bybit EU,.../rules/bybit-eu.list
+ruleset=Cloudflare 验证,.../rules/cloudflare-challenge.list
 ```
 
 当前：
@@ -99,6 +100,7 @@ ruleset=Bybit EU,.../rules/bybit-eu.list
 - `custom-media.list`：`douyu.com`、`douyucdn.cn`
 - `any.list`：`anyrouter.top` 及全部子域名，独立 `Any` 组，默认日本。
 - `bybit-eu.list`：`bybit.eu` 及全部子域名和已核实的外部依赖，独立 `Bybit EU` 组，默认德国。
+- `cloudflare-challenge.list`：精确匹配 `challenges.cloudflare.com`，独立 `Cloudflare 验证` 组，默认跟随 `🚀 节点选择`。
 
 `自定义-网站` 默认选择 `🇯🇵 日本节点`，但日本组内部的具体节点由你手动选择；也可在 `自定义-网站` 中直接选择某一条真实节点。
 
@@ -121,6 +123,14 @@ ruleset=Bybit EU,.../rules/bybit-eu.list
 未将页脚中的全球站、其他地区站、社交媒体外链或整个 Google/Apple/CDN 根域名纳入。核心 EU 域名的所有子域名均已覆盖，但公开页面核查无法保证穷尽登录后的 KYC、支付及 App 专属第三方端点；遇到遗漏可按客户端连接日志补充精确主机。也不通过固定 IP 规则匹配会变化且可能共享的 CDN 地址。
 
 两个新组都是独立手动 `select`，支持地区组、常用节点、DIRECT 和任意真实节点。
+
+## Cloudflare 人机验证独立分流
+
+新增 `Cloudflare 验证` 手动策略组，仅捕获官方 Turnstile/Challenge 资源主机 `challenges.cloudflare.com`，其规则位于上游通用规则之前。默认选择 `🚀 节点选择`，也可选择 `DIRECT`、国家/地区组或具体节点。建议尽量让验证流量与受保护网站使用同一个出口，避免切换 IP 影响验证结果。
+
+规则不匹配整个 `cloudflare.com`，也不会拦截 Cloudflare CDN 或 WARP 连接。受保护网站自身域名下的 `/cdn-cgi/challenge-platform/` 路径不是单独的主机名，Clash 的常规域名规则无法将它与同域网站流量分开；网站的这部分验证请求仍按网站原有规则分流。
+
+Cloudflare 官方文档：[Turnstile 资源主机与 CSP](https://developers.cloudflare.com/turnstile/reference/content-security-policy/)；[Turnstile JS 地址](https://developers.cloudflare.com/turnstile/get-started/client-side-rendering/)。
 
 ## 5EPlay 开屏广告
 
@@ -146,14 +156,15 @@ https://raw.githubusercontent.com/Fy1ng/Fy1ng-Clash-Rules/main/outputs/edgetunne
 | `rules/custom-media.list` | 自定义直播 |
 | `rules/any.list` | AnyRouter 独立分流 |
 | `rules/bybit-eu.list` | Bybit EU 独立分流 |
+| `rules/cloudflare-challenge.list` | Cloudflare 人机验证独立分流 |
 | `upstream/CM_Online_Full.original.ini` | 上游快照 |
 
 ## 静态校验
 
 本次打包执行了以下检查：
 
-- 活跃上游 ruleset 为 43 条，自定义 ruleset 为 4 条。
-- 总策略组为 39 个。
+- 活跃上游 ruleset 为 43 条，自定义 ruleset 为 5 条。
+- 总策略组为 40 个。
 - 不存在任何 `url-test` 策略组。
 - 不存在 `♻️ 自动选择` 的定义或引用。
 - 仅存在一个 `load-balance` 策略组，即 `📶 官方优选`。
