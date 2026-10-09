@@ -2,7 +2,7 @@
 
 基于 CMLiussss `CM_Online_Full` 的 EdgeTunnel / Azure Subconverter 配置。
 
-当前版本保留上游 43 条 ruleset，并新增五份自定义规则清单；策略组改为“手动优先”：
+当前版本保留上游 43 条 ruleset，并新增六份自定义规则清单；策略组改为“手动优先”：
 
 - 取消 `♻️ 自动选择` 及全部国家/地区 `url-test`。
 - 保留 `📶 官方优选` 的 `load-balance`。
@@ -27,7 +27,7 @@ https://raw.githubusercontent.com/Fy1ng/Fy1ng-Clash-Rules/main/outputs/edgetunne
 - [Any 规则](outputs/edgetunnel-subconverter/rules/any.list)
 - [Bybit EU 规则](outputs/edgetunnel-subconverter/rules/bybit-eu.list)
 - [Cloudflare 人机验证规则](outputs/edgetunnel-subconverter/rules/cloudflare-challenge.list)
-- [FlClash 5EPlay 精准开屏广告覆写（推荐）](outputs/flclash/app-adblock-override.js) — 完整恢复最初实测有效规则，并仅作用于 5EPlay
+- [5EPlay 开屏广告规则](outputs/edgetunnel-subconverter/rules/app-adblock.list) — 使用实测有效的全局广告域名规则
 - [完整配置包](outputs/edgetunnel-subconverter.zip)
 
 节点连接信息由用户自己的订阅提供。
