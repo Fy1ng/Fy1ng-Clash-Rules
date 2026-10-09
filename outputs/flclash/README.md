@@ -2,7 +2,7 @@
 
 适用于 Android FlClash / Mihomo，当前仅针对：
 
-- 5EPlay：`com.fiveplay.sihz`
+- 5EPlay：`com.fiveplay`
 
 Oopz 不再使用网络层广告拦截。其启动流程依赖开屏广告状态机，直接 REJECT 广告网络可能导致无法进入 App。
 
@@ -11,7 +11,7 @@ Oopz 不再使用网络层广告拦截。其启动流程依赖开屏广告状态
 普通 Subconverter ruleset 只能做全局域名拦截；本脚本使用 Mihomo：
 
 ```text
-AND,((PROCESS-NAME,com.fiveplay.sihz),(DOMAIN,广告域名)),REJECT
+AND,((PROCESS-NAME,com.fiveplay),(DOMAIN,广告域名)),REJECT
 ```
 
 因此同一广告域名在其他 App 中不会被拦截。
@@ -26,7 +26,7 @@ AND,((PROCESS-NAME,com.fiveplay.sihz),(DOMAIN,广告域名)),REJECT
 2. 选择“脚本”模式。
 3. 新建覆写脚本，把 `app-adblock-override.js` 全文粘贴进去。
 4. 将该脚本关联到当前订阅。
-5. 打开“预览”，确认 `rules` 顶部出现 `AND,((PROCESS-NAME,com.fiveplay.sihz)...`。
+5. 打开“预览”，确认 `rules` 顶部出现 `AND,((PROCESS-NAME,com.fiveplay)...`。
 6. 重新启用配置后，强制停止 5EPlay 并清除缓存，再启动测试。
 
 ## 关于 5E 第一方广告接口
