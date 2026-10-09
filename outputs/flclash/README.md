@@ -1,40 +1,38 @@
-# FlClash 精准开屏广告覆写
+# FlClash 5EPlay 开屏广告规则
 
-适用于 Android FlClash / Mihomo，当前仅针对：
+当前生产脚本：
 
-- 5EPlay：`com.fiveplay`
+- `app-adblock-override.js`
 
-Oopz 不再使用网络层广告拦截。其启动流程依赖开屏广告状态机，直接 REJECT 广告网络可能导致无法进入 App。
+## 当前结论
 
-## 为什么使用进程限定规则
+实测结果：
 
-普通 Subconverter ruleset 只能做全局域名拦截；本脚本使用 Mihomo：
+- 加入哨兵规则后，`example.com` 被正常 REJECT，说明脚本覆写本身已经生效。
+- 去掉 `PROCESS-NAME` 条件后，同一批 5E 广告域名可以成功去除开屏广告。
+- 因此当前 FlClash / Android 环境中的失效点是进程匹配层，而不是广告域名集合。
 
-```text
-AND,((PROCESS-NAME,com.fiveplay),(DOMAIN,广告域名)),REJECT
-```
-
-因此同一广告域名在其他 App 中不会被拦截。
-
-## 当前规则来源
-
-脚本完整恢复了最初实际测试中能够去除 5EPlay 开屏广告的规则集合，不再对该集合做二次缩减。包括 GDT、Sigmob、1RTB、酷盈、Bayes、AdBiding、旺脉、AdScope、快手广告链路等。
+Mihomo 文档说明 Android 理论上支持用 `PROCESS-NAME` 匹配包名，但 FlClash Android 历史上存在进程/UID 解析相关问题。为保证实际可用，生产脚本现在使用全局域名规则。
 
 ## 使用方法
 
 1. FlClash 打开当前订阅的“覆写”。
 2. 选择“脚本”模式。
-3. 新建覆写脚本，把 `app-adblock-override.js` 全文粘贴进去。
-4. 将该脚本关联到当前订阅。
-5. 打开“预览”，确认 `rules` 顶部出现 `AND,((PROCESS-NAME,com.fiveplay)...`。
-6. 重新启用配置后，强制停止 5EPlay 并清除缓存，再启动测试。
+3. 导入 `app-adblock-override.js`。
+4. 将脚本关联到当前订阅并确认已启用。
+5. 更新配置，重启 FlClash。
+6. 强制停止 5EPlay、清除缓存，再启动测试。
 
-## 关于 5E 第一方广告接口
+## 影响范围
 
-APK 中确实还存在：
+生产脚本不再使用 `PROCESS-NAME`，因此其中列出的共享广告平台域名会对所有 App 生效。
 
-```text
-https://ya-api-app.5eplay.com/v1/home/adv_slot/list
-```
+如果后续 FlClash 的 Android 进程识别恢复可靠，可重新测试：
 
-但“最初域名规则实际可去除开屏广告”的测试结果说明，当前出现的开屏广告并不必然来自该第一方接口。该接口与正常业务共用 `ya-api-app.5eplay.com`，Clash 无法按 HTTPS URL 路径单独拦截，因此本方案不封整个域名。
+- `5e-adblock-process-experimental.js`
+
+诊断脚本：
+
+- `5e-adblock-global-test.js`
+
+其中包含 `example.com` 哨兵，只用于测试，不应长期启用。
