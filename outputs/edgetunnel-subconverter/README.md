@@ -1,6 +1,6 @@
 # Fy1ng Clash Rules — 手动节点版
 
-此配置基于仓库内的 `upstream/CM_Online_Full.original.ini`，保留上游 43 条 ruleset，并在其基础上加入五份自定义规则清单，同时重构策略组。
+此配置基于仓库内的 `upstream/CM_Online_Full.original.ini`，保留上游 43 条 ruleset，并在其基础上加入四份自定义规则清单，同时重构策略组。
 
 ## 本版行为
 
@@ -91,7 +91,6 @@ ruleset=自定义-网站,.../rules/custom-sites.list
 ruleset=自定义-直播,.../rules/custom-media.list
 ruleset=Any,.../rules/any.list
 ruleset=Bybit EU,.../rules/bybit-eu.list
-ruleset=🛑 广告拦截,.../rules/app-adblock.list
 ```
 
 当前：
@@ -100,8 +99,6 @@ ruleset=🛑 广告拦截,.../rules/app-adblock.list
 - `custom-media.list`：`douyu.com`、`douyucdn.cn`
 - `any.list`：`anyrouter.top` 及全部子域名，独立 `Any` 组，默认日本。
 - `bybit-eu.list`：`bybit.eu` 及全部子域名和已核实的外部依赖，独立 `Bybit EU` 组，默认德国。
-- `app-adblock.list`：5EPlay / Oopz 已确认的领页开屏广告域名，使用现有 `🛑 广告拦截` 组；仅做精确 `DOMAIN` 匹配，避免扩大拦截范围影响应用启动。
-  - 该列表仅作为普通 Subconverter 配置的基础拦截。由于两个 App 都会切换/缓存下游广告 SDK，Android FlClash 推荐改用 [`../flclash/app-adblock-override.js`](../flclash/app-adblock-override.js) 的 `PROCESS-NAME + DOMAIN` 精准覆写。
 
 `自定义-网站` 默认选择 `🇯🇵 日本节点`，但日本组内部的具体节点由你手动选择；也可在 `自定义-网站` 中直接选择某一条真实节点。
 
@@ -125,6 +122,10 @@ ruleset=🛑 广告拦截,.../rules/app-adblock.list
 
 两个新组都是独立手动 `select`，支持地区组、常用节点、DIRECT 和任意真实节点。
 
+## 5EPlay 开屏广告
+
+5EPlay 的开屏广告改由 [`../flclash/app-adblock-override.js`](../flclash/app-adblock-override.js) 处理。该脚本完整恢复最初实测有效的广告域名集合，并用 Android 包名 `com.fiveplay.sihz` 限定作用范围。Oopz 不使用网络层广告拦截。
+
 ## 使用
 
 在 `sub.cmliussss.com` 中保持生成类型为 Clash、后端为“肥羊提供-增强型后端”，远程配置填写：
@@ -145,14 +146,13 @@ https://raw.githubusercontent.com/Fy1ng/Fy1ng-Clash-Rules/main/outputs/edgetunne
 | `rules/custom-media.list` | 自定义直播 |
 | `rules/any.list` | AnyRouter 独立分流 |
 | `rules/bybit-eu.list` | Bybit EU 独立分流 |
-| `rules/app-adblock.list` | 5EPlay / Oopz 精确开屏广告拦截 |
 | `upstream/CM_Online_Full.original.ini` | 上游快照 |
 
 ## 静态校验
 
 本次打包执行了以下检查：
 
-- 活跃上游 ruleset 为 43 条，自定义 ruleset 为 5 条。
+- 活跃上游 ruleset 为 43 条，自定义 ruleset 为 4 条。
 - 总策略组为 39 个。
 - 不存在任何 `url-test` 策略组。
 - 不存在 `♻️ 自动选择` 的定义或引用。
