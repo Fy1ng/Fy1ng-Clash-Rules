@@ -1,6 +1,6 @@
 # Fy1ng Clash Rules — 手动节点版
 
-此配置基于仓库内的 `upstream/CM_Online_Full.original.ini`，保留上游 43 条 ruleset，并在其基础上加入六份自定义规则清单，同时重构策略组。
+此配置基于仓库内的 `upstream/CM_Online_Full.original.ini`，保留 42 条上游原有 ruleset，并将原 `Claude.list` 替换为自维护的 Claude/Anthropic 规则；共七份自定义规则清单，同时重构策略组。
 
 ## 本版行为
 
@@ -55,6 +55,7 @@ custom_proxy_group=📶 官方优选`load-balance`...
 
 - 📲 电报消息
 - 🤖 OpenAi
+- 🤖 Claude
 - 📹 油管视频
 - 🎥 奈飞视频
 - 📺 巴哈姆特
@@ -74,11 +75,12 @@ custom_proxy_group=📶 官方优选`load-balance`...
 
 ```text
 🤖 OpenAi   → Azure-US-01
+🤖 Claude   → US-02
 📹 油管视频 → JP-02
 📲 电报消息 → SG-01
 ```
 
-这样三个业务分组彼此独立。
+这样四个业务分组彼此独立。
 
 如果业务组选择的是 `🇯🇵 日本节点` 这样的国家组，那么使用的是该国家组当前手动选中的节点；多个业务如果都引用同一个国家组，会共享该国家组的选择。需要完全独立时，直接在各业务组中选择具体真实节点。
 
@@ -93,6 +95,7 @@ ruleset=Any,.../rules/any.list
 ruleset=Bybit EU,.../rules/bybit-eu.list
 ruleset=Cloudflare 验证,.../rules/cloudflare-challenge.list
 ruleset=🛑 广告拦截,.../rules/app-adblock.list
+ruleset=🤖 Claude,.../rules/claude-anthropic.list
 ```
 
 当前：
@@ -103,10 +106,21 @@ ruleset=🛑 广告拦截,.../rules/app-adblock.list
 - `bybit-eu.list`：`bybit.eu` 及全部子域名和已核实的外部依赖，独立 `Bybit EU` 组，默认德国。
 - `cloudflare-challenge.list`：精确匹配 `challenges.cloudflare.com`，独立 `Cloudflare 验证` 组，默认跟随 `🚀 节点选择`。
 - `app-adblock.list`：5EPlay 开屏广告实测有效的广告平台域名，进入现有 `🛑 广告拦截` 组；为全局域名规则。
+- `claude-anthropic.list`：独立 `🤖 Claude` 组，覆盖 Claude/Anthropic 自有域名及已识别的独立静态资源主机。
 
 `自定义-网站` 默认选择 `🇯🇵 日本节点`，但日本组内部的具体节点由你手动选择；也可在 `自定义-网站` 中直接选择某一条真实节点。
 
 `自定义-直播` 默认 `DIRECT`。
+
+## Claude / Anthropic 独立分流
+
+`🤖 Claude` 为手动 `select` 组，首次导入默认跟随 `🚀 节点选择`，之后可单独选择地区组、`⭐ 常用节点`、`☑️ 手动切换`、`DIRECT` 或任意真实节点。它与 `🤖 OpenAi` 的手动选择相互独立。
+
+规则使用仓库内的 `rules/claude-anthropic.list`，位于全部上游 ruleset 前面，防止上游 `ai.list` 抢先将 `claude.ai`、`anthropic.com` 等流量分到 `🤖 OpenAi`。原来指向 `🤖 OpenAi` 的上游 `Claude.list` 已移除，避免重复归类。
+
+该清单覆盖 `anthropic.com`、`claude.ai`、`claude.com`、`claude.dev`、`clau.de`、`claudemcpclient.com`、`claudemcpcontent.com`、`claudeusercontent.com` 及已识别的 Anthropic 官网静态资源主机 `servd-anthropic-website.b-cdn.net`。使用 `DOMAIN-SUFFIX` 同时匹配根域名和子域名，兼顾 API、网页登录、Claude Code 和内容资源。
+
+域名来源：[v2fly/domain-list-community: anthropic](https://github.com/v2fly/domain-list-community/blob/master/data/anthropic)。这里不接管 `auth0.com`、`sentry.io`、`statsigapi.net` 等其他服务共用的第三方域名，避免影响 OpenAI 和其他网站；这些共享依赖仍可能命中原有上游规则。多个业务组选择同一个地区组时，也会共享该地区组当前选中的节点。
 
 ## Bybit EU 覆盖与来源
 
@@ -159,6 +173,7 @@ https://raw.githubusercontent.com/Fy1ng/Fy1ng-Clash-Rules/main/outputs/edgetunne
 | `rules/any.list` | AnyRouter 独立分流 |
 | `rules/bybit-eu.list` | Bybit EU 独立分流 |
 | `rules/cloudflare-challenge.list` | Cloudflare 人机验证独立分流 |
+| `rules/claude-anthropic.list` | Claude / Anthropic 独立分流 |
 | `rules/app-adblock.list` | 5EPlay 开屏广告全局拦截 |
 | `upstream/CM_Online_Full.original.ini` | 上游快照 |
 
@@ -166,13 +181,14 @@ https://raw.githubusercontent.com/Fy1ng/Fy1ng-Clash-Rules/main/outputs/edgetunne
 
 本次打包执行了以下检查：
 
-- 活跃上游 ruleset 为 43 条，自定义 ruleset 为 6 条。
-- 总策略组为 40 个。
+- 活跃上游 ruleset 为 42 条，自定义 ruleset 为 7 条。
+- 总策略组为 41 个。
 - 不存在任何 `url-test` 策略组。
 - 不存在 `♻️ 自动选择` 的定义或引用。
 - 仅存在一个 `load-balance` 策略组，即 `📶 官方优选`。
 - 12 个国家/地区组均为 `select`。
 - `⭐ 常用节点` 为 `select`，并使用名称正则筛选节点。
-- `🤖 OpenAi` 等业务组均带 `.*`，可直接列出真实节点。
+- `🤖 OpenAi`、`🤖 Claude` 等业务组均带 `.*`，可直接列出真实节点。
+- Claude 专用 ruleset 排在通用 `ai.list` 前面，且不再由 `🤖 OpenAi` 使用上游 `Claude.list`。
 
 此处是静态配置校验，不等同于使用真实订阅对在线转换后端和 Mihomo 内核做完整联调。

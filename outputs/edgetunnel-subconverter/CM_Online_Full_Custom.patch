@@ -1,11 +1,11 @@
 --- upstream/CM_Online_Full.original.ini
 +++ CM_Online_Full_Custom.ini
-@@ -3,13 +3,25 @@
+@@ -3,13 +3,26 @@
  ;acl4SSR规则
  
  ;去广告：支持
--;自动测速：支持
 +;自动测速：关闭（仅保留“📶 官方优选”的 load-balance）
+-;自动测速：支持
  ;微软分流：支持
  ;苹果分流：支持
  ;增强中国IP段：支持
@@ -13,7 +13,7 @@
  
  ;设置规则标志位
 +; ===== CUSTOM RULES BEGIN =====
-+; 六条规则 URL 托管于 Fy1ng/Fy1ng-Clash-Rules 仓库的 main 分支。
++; 七条规则 URL 托管于 Fy1ng/Fy1ng-Clash-Rules 仓库的 main 分支。
 +; 一个 list 中的全部规则共用同一策略组；不同出口分放到不同 list。
 +; 自定义规则排在上游所有 ruleset 之前，优先覆盖这些网站的原分流。
 +ruleset=自定义-网站,https://raw.githubusercontent.com/Fy1ng/Fy1ng-Clash-Rules/main/outputs/edgetunnel-subconverter/rules/custom-sites.list
@@ -22,25 +22,51 @@
 +ruleset=Bybit EU,https://raw.githubusercontent.com/Fy1ng/Fy1ng-Clash-Rules/main/outputs/edgetunnel-subconverter/rules/bybit-eu.list
 +ruleset=Cloudflare 验证,https://raw.githubusercontent.com/Fy1ng/Fy1ng-Clash-Rules/main/outputs/edgetunnel-subconverter/rules/cloudflare-challenge.list
 +ruleset=🛑 广告拦截,https://raw.githubusercontent.com/Fy1ng/Fy1ng-Clash-Rules/main/outputs/edgetunnel-subconverter/rules/app-adblock.list
++ruleset=🤖 Claude,https://raw.githubusercontent.com/Fy1ng/Fy1ng-Clash-Rules/main/outputs/edgetunnel-subconverter/rules/claude-anthropic.list
 +; ===== CUSTOM RULES END =====
 +
  ruleset=🚀 节点选择,https://raw.githubusercontent.com/cmliu/ACL4SSR/refs/heads/main/Clash/PlayStore.list
  ruleset=🎯 全球直连,https://raw.githubusercontent.com/cmliu/ACL4SSR/refs/heads/main/Clash/CFnat.list
  ruleset=🎯 全球直连,https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/LocalAreaNetwork.list
-@@ -58,35 +70,60 @@
+@@ -28,7 +41,6 @@
+ ruleset=🤖 OpenAi,https://raw.githubusercontent.com/cmliu/ACL4SSR/refs/heads/main/Clash/ai.list
+ ruleset=🤖 OpenAi,https://raw.githubusercontent.com/cmliu/ACL4SSR/main/Clash/Copilot.list
+ ruleset=🤖 OpenAi,https://raw.githubusercontent.com/cmliu/ACL4SSR/main/Clash/GithubCopilot.list
+-ruleset=🤖 OpenAi,https://raw.githubusercontent.com/cmliu/ACL4SSR/main/Clash/Claude.list
+ ruleset=🎶 网易音乐,https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Ruleset/NetEaseMusic.list
+ ruleset=🎮 游戏平台,https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Ruleset/Epic.list
+ ruleset=🎮 游戏平台,https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Ruleset/Origin.list
+@@ -58,35 +70,61 @@
  ;设置规则标志位
  
  ;设置分组标志位
--custom_proxy_group=🚀 节点选择`select`[]♻️ 自动选择`[]🇭🇰 香港节点`[]🇹🇼 台湾节点`[]🇸🇬 狮城节点`[]🇯🇵 日本节点`[]🇺🇲 美国节点`[]🇰🇷 韩国节点`[]📶 官方优选`[]☑️ 手动切换`[]DIRECT
 +; 所有常规地区组均为手动 select，不进行自动测速。
 +; 📶 官方优选保留上游 load-balance 行为。
 +; 业务分组末尾使用 .*，因此可直接选择任意真实节点，各业务互不影响。
 +custom_proxy_group=🚀 节点选择`select`[]🇭🇰 香港节点`[]⭐ 常用节点`[]🇹🇼 台湾节点`[]🇸🇬 狮城节点`[]🇯🇵 日本节点`[]🇺🇲 美国节点`[]🇰🇷 韩国节点`[]🇬🇧 英国节点`[]🇩🇪 德国节点`[]🇫🇷 法国节点`[]🇳🇱 荷兰节点`[]🇨🇦 加拿大节点`[]🇦🇺 澳大利亚节点`[]📶 官方优选`[]☑️ 手动切换`[]DIRECT
+-custom_proxy_group=🚀 节点选择`select`[]♻️ 自动选择`[]🇭🇰 香港节点`[]🇹🇼 台湾节点`[]🇸🇬 狮城节点`[]🇯🇵 日本节点`[]🇺🇲 美国节点`[]🇰🇷 韩国节点`[]📶 官方优选`[]☑️ 手动切换`[]DIRECT
  custom_proxy_group=☑️ 手动切换`select`.*
--custom_proxy_group=♻️ 自动选择`url-test`[]🇭🇰 香港节点`[]🇸🇬 狮城节点`[]🇯🇵 日本节点`[]🇰🇷 韩国节点`http://www.gstatic.com/generate_204`300,,50
 +; 常用节点：按节点名称筛选主流云/VPS 厂商与常见 AI 服务标签；不使用泛化的 AI/DO 等短词以减少误匹配。
 +custom_proxy_group=⭐ 常用节点`select`(?i)(AWS|Amazon(?:[ _-]?Web[ _-]?Services)?|EC2|Lightsail|Azure|Microsoft[ _-]?Azure|GCP|Google[ _-]?Cloud|GoogleCloud|GCE|Oracle|Oracle[ _-]?Cloud|OCI|Cloudflare|DigitalOcean|Vultr|Linode|Akamai|Hetzner|OVH|Scaleway|UpCloud|Leaseweb|Contabo|Netcup|RackNerd|DMIT|GreenCloud|CloudCone|BuyVM|HostHatch|Bandwagon|搬瓦工|腾讯云|Tencent(?:[ _-]?Cloud)?|QCloud|阿里云|Aliyun|AliCloud|Alibaba(?:[ _-]?Cloud)?|华为云|Huawei(?:[ _-]?Cloud)?|百度智能云|百度云|Baidu(?:[ _-]?(?:AI[ _-]?)?Cloud)?|(?<![a-z])BCE(?![a-z])|京东云|JDCloud|JD[ _-]?Cloud|火山引擎|Volcengine|Volcano[ _-]?Engine|BytePlus|天翼云|CTYun|China[ _-]?Telecom[ _-]?Cloud|移动云|China[ _-]?Mobile[ _-]?Cloud|(?<![a-z])ECloud(?![a-z])|联通云|China[ _-]?Unicom[ _-]?Cloud|Unicom[ _-]?Cloud|Wo[ _-]?Cloud|UCloud|优刻得|青云|QingCloud|七牛云|Qiniu|金山云|Kingsoft(?:[ _-]?Cloud)?|KSCloud|Ksyun|浪潮云|Inspur(?:[ _-]?Cloud)?|首都在线|Capital[ _-]?Online|CapitalOnline|白山云|Baishan(?:[ _-]?Cloud)?|BaishanCloud|IBM[ _-]?Cloud|GrokBot|Grok[ _-]?Bot|MuseAI|Muse[ _-]?AI|OpenAI|ChatGPT|Codex|Anthropic|Claude|Gemini|Google[ _-]?AI|xAI|Grok|DeepSeek|OpenRouter|Perplexity|Cursor|Windsurf|GitHub[ _-]?Copilot|Copilot|Kimi|Moonshot|Qwen|通义|Zhipu|智谱|SiliconFlow|硅基流动|AgentRouter)`[]REJECT
+-custom_proxy_group=♻️ 自动选择`url-test`[]🇭🇰 香港节点`[]🇸🇬 狮城节点`[]🇯🇵 日本节点`[]🇰🇷 韩国节点`http://www.gstatic.com/generate_204`300,,50
  custom_proxy_group=📶 官方优选`load-balance`(官方|防|电信|联通|移动|CT|CU|CM|CF|t.me|WARP|Warp|warp)`http://www.gstatic.com/generate_204`300,,50
++custom_proxy_group=📲 电报消息`select`[]🚀 节点选择`[]⭐ 常用节点`[]🇭🇰 香港节点`[]🇹🇼 台湾节点`[]🇸🇬 狮城节点`[]🇯🇵 日本节点`[]🇺🇲 美国节点`[]🇰🇷 韩国节点`[]🇬🇧 英国节点`[]🇩🇪 德国节点`[]🇫🇷 法国节点`[]🇳🇱 荷兰节点`[]🇨🇦 加拿大节点`[]🇦🇺 澳大利亚节点`[]📶 官方优选`[]☑️ 手动切换`[]DIRECT`.*
++custom_proxy_group=🤖 OpenAi`select`[]🚀 节点选择`[]⭐ 常用节点`[]🇭🇰 香港节点`[]🇹🇼 台湾节点`[]🇸🇬 狮城节点`[]🇯🇵 日本节点`[]🇺🇲 美国节点`[]🇰🇷 韩国节点`[]🇬🇧 英国节点`[]🇩🇪 德国节点`[]🇫🇷 法国节点`[]🇳🇱 荷兰节点`[]🇨🇦 加拿大节点`[]🇦🇺 澳大利亚节点`[]📶 官方优选`[]☑️ 手动切换`[]DIRECT`.*
++custom_proxy_group=🤖 Claude`select`[]🚀 节点选择`[]⭐ 常用节点`[]🇭🇰 香港节点`[]🇹🇼 台湾节点`[]🇸🇬 狮城节点`[]🇯🇵 日本节点`[]🇺🇲 美国节点`[]🇰🇷 韩国节点`[]🇬🇧 英国节点`[]🇩🇪 德国节点`[]🇫🇷 法国节点`[]🇳🇱 荷兰节点`[]🇨🇦 加拿大节点`[]🇦🇺 澳大利亚节点`[]📶 官方优选`[]☑️ 手动切换`[]DIRECT`.*
++custom_proxy_group=📹 油管视频`select`[]🚀 节点选择`[]⭐ 常用节点`[]🇭🇰 香港节点`[]🇹🇼 台湾节点`[]🇸🇬 狮城节点`[]🇯🇵 日本节点`[]🇺🇲 美国节点`[]🇰🇷 韩国节点`[]🇬🇧 英国节点`[]🇩🇪 德国节点`[]🇫🇷 法国节点`[]🇳🇱 荷兰节点`[]🇨🇦 加拿大节点`[]🇦🇺 澳大利亚节点`[]📶 官方优选`[]☑️ 手动切换`[]DIRECT`.*
++custom_proxy_group=🎥 奈飞视频`select`[]🚀 节点选择`[]⭐ 常用节点`[]🇭🇰 香港节点`[]🇹🇼 台湾节点`[]🇸🇬 狮城节点`[]🇯🇵 日本节点`[]🇺🇲 美国节点`[]🇰🇷 韩国节点`[]🇬🇧 英国节点`[]🇩🇪 德国节点`[]🇫🇷 法国节点`[]🇳🇱 荷兰节点`[]🇨🇦 加拿大节点`[]🇦🇺 澳大利亚节点`[]📶 官方优选`[]☑️ 手动切换`[]DIRECT`.*
++custom_proxy_group=📺 巴哈姆特`select`[]🇹🇼 台湾节点`[]⭐ 常用节点`[]🚀 节点选择`[]🇭🇰 香港节点`[]🇸🇬 狮城节点`[]🇯🇵 日本节点`[]🇺🇲 美国节点`[]🇰🇷 韩国节点`[]🇬🇧 英国节点`[]🇩🇪 德国节点`[]🇫🇷 法国节点`[]🇳🇱 荷兰节点`[]🇨🇦 加拿大节点`[]🇦🇺 澳大利亚节点`[]📶 官方优选`[]☑️ 手动切换`[]DIRECT`.*
++custom_proxy_group=📺 哔哩哔哩`select`[]🎯 全球直连`[]⭐ 常用节点`[]🇹🇼 台湾节点`[]🇭🇰 香港节点`[]🚀 节点选择`[]🇸🇬 狮城节点`[]🇯🇵 日本节点`[]🇺🇲 美国节点`[]🇰🇷 韩国节点`[]🇬🇧 英国节点`[]🇩🇪 德国节点`[]🇫🇷 法国节点`[]🇳🇱 荷兰节点`[]🇨🇦 加拿大节点`[]🇦🇺 澳大利亚节点`[]☑️ 手动切换`[]DIRECT`.*
++custom_proxy_group=🌍 国外媒体`select`[]🚀 节点选择`[]⭐ 常用节点`[]🇭🇰 香港节点`[]🇹🇼 台湾节点`[]🇸🇬 狮城节点`[]🇯🇵 日本节点`[]🇺🇲 美国节点`[]🇰🇷 韩国节点`[]🇬🇧 英国节点`[]🇩🇪 德国节点`[]🇫🇷 法国节点`[]🇳🇱 荷兰节点`[]🇨🇦 加拿大节点`[]🇦🇺 澳大利亚节点`[]📶 官方优选`[]☑️ 手动切换`[]DIRECT`.*
++custom_proxy_group=🌏 国内媒体`select`[]DIRECT`[]⭐ 常用节点`[]🇭🇰 香港节点`[]🇹🇼 台湾节点`[]🇸🇬 狮城节点`[]🇯🇵 日本节点`[]🇺🇲 美国节点`[]🇰🇷 韩国节点`[]🇬🇧 英国节点`[]🇩🇪 德国节点`[]🇫🇷 法国节点`[]🇳🇱 荷兰节点`[]🇨🇦 加拿大节点`[]🇦🇺 澳大利亚节点`[]🚀 节点选择`[]☑️ 手动切换`.*
++custom_proxy_group=📢 谷歌FCM`select`[]DIRECT`[]⭐ 常用节点`[]🚀 节点选择`[]🇭🇰 香港节点`[]🇹🇼 台湾节点`[]🇸🇬 狮城节点`[]🇯🇵 日本节点`[]🇺🇲 美国节点`[]🇰🇷 韩国节点`[]🇬🇧 英国节点`[]🇩🇪 德国节点`[]🇫🇷 法国节点`[]🇳🇱 荷兰节点`[]🇨🇦 加拿大节点`[]🇦🇺 澳大利亚节点`[]📶 官方优选`[]☑️ 手动切换`.*
++custom_proxy_group=Ⓜ️ 微软Bing`select`[]DIRECT`[]⭐ 常用节点`[]🚀 节点选择`[]🇭🇰 香港节点`[]🇹🇼 台湾节点`[]🇸🇬 狮城节点`[]🇯🇵 日本节点`[]🇺🇲 美国节点`[]🇰🇷 韩国节点`[]🇬🇧 英国节点`[]🇩🇪 德国节点`[]🇫🇷 法国节点`[]🇳🇱 荷兰节点`[]🇨🇦 加拿大节点`[]🇦🇺 澳大利亚节点`[]📶 官方优选`[]☑️ 手动切换`.*
++custom_proxy_group=Ⓜ️ 微软云盘`select`[]DIRECT`[]⭐ 常用节点`[]🚀 节点选择`[]🇭🇰 香港节点`[]🇹🇼 台湾节点`[]🇸🇬 狮城节点`[]🇯🇵 日本节点`[]🇺🇲 美国节点`[]🇰🇷 韩国节点`[]🇬🇧 英国节点`[]🇩🇪 德国节点`[]🇫🇷 法国节点`[]🇳🇱 荷兰节点`[]🇨🇦 加拿大节点`[]🇦🇺 澳大利亚节点`[]📶 官方优选`[]☑️ 手动切换`.*
++custom_proxy_group=Ⓜ️ 微软服务`select`[]DIRECT`[]⭐ 常用节点`[]🚀 节点选择`[]🇭🇰 香港节点`[]🇹🇼 台湾节点`[]🇸🇬 狮城节点`[]🇯🇵 日本节点`[]🇺🇲 美国节点`[]🇰🇷 韩国节点`[]🇬🇧 英国节点`[]🇩🇪 德国节点`[]🇫🇷 法国节点`[]🇳🇱 荷兰节点`[]🇨🇦 加拿大节点`[]🇦🇺 澳大利亚节点`[]📶 官方优选`[]☑️ 手动切换`.*
++custom_proxy_group=🍎 苹果服务`select`[]DIRECT`[]⭐ 常用节点`[]🚀 节点选择`[]🇭🇰 香港节点`[]🇹🇼 台湾节点`[]🇸🇬 狮城节点`[]🇯🇵 日本节点`[]🇺🇲 美国节点`[]🇰🇷 韩国节点`[]🇬🇧 英国节点`[]🇩🇪 德国节点`[]🇫🇷 法国节点`[]🇳🇱 荷兰节点`[]🇨🇦 加拿大节点`[]🇦🇺 澳大利亚节点`[]📶 官方优选`[]☑️ 手动切换`.*
++custom_proxy_group=🎮 游戏平台`select`[]DIRECT`[]⭐ 常用节点`[]🚀 节点选择`[]🇭🇰 香港节点`[]🇹🇼 台湾节点`[]🇸🇬 狮城节点`[]🇯🇵 日本节点`[]🇺🇲 美国节点`[]🇰🇷 韩国节点`[]🇬🇧 英国节点`[]🇩🇪 德国节点`[]🇫🇷 法国节点`[]🇳🇱 荷兰节点`[]🇨🇦 加拿大节点`[]🇦🇺 澳大利亚节点`[]📶 官方优选`[]☑️ 手动切换`.*
++custom_proxy_group=🎶 网易音乐`select`[]DIRECT`[]⭐ 常用节点`[]🚀 节点选择`[]🇭🇰 香港节点`[]🇹🇼 台湾节点`[]🇸🇬 狮城节点`[]🇯🇵 日本节点`[]🇺🇲 美国节点`[]🇰🇷 韩国节点`[]🇬🇧 英国节点`[]🇩🇪 德国节点`[]🇫🇷 法国节点`[]🇳🇱 荷兰节点`[]🇨🇦 加拿大节点`[]🇦🇺 澳大利亚节点`[]☑️ 手动切换`.*
++custom_proxy_group=🎯 全球直连`select`[]DIRECT`[]🚀 节点选择
 -custom_proxy_group=📲 电报消息`select`[]🚀 节点选择`[]♻️ 自动选择`[]🇸🇬 狮城节点`[]🇭🇰 香港节点`[]🇹🇼 台湾节点`[]🇯🇵 日本节点`[]🇺🇲 美国节点`[]🇰🇷 韩国节点`[]📶 官方优选`[]☑️ 手动切换`[]DIRECT
 -custom_proxy_group=🤖 OpenAi`select`[]🚀 节点选择`[]♻️ 自动选择`[]🇸🇬 狮城节点`[]🇭🇰 香港节点`[]🇹🇼 台湾节点`[]🇯🇵 日本节点`[]🇺🇲 美国节点`[]🇰🇷 韩国节点`[]📶 官方优选`[]☑️ 手动切换`[]DIRECT
 -custom_proxy_group=📹 油管视频`select`[]🚀 节点选择`[]♻️ 自动选择`[]🇸🇬 狮城节点`[]🇭🇰 香港节点`[]🇹🇼 台湾节点`[]🇯🇵 日本节点`[]🇺🇲 美国节点`[]🇰🇷 韩国节点`[]📶 官方优选`[]☑️ 手动切换`[]DIRECT
@@ -57,31 +83,8 @@
 -custom_proxy_group=🎮 游戏平台`select`[]DIRECT`[]🚀 节点选择`[]🇺🇲 美国节点`[]🇭🇰 香港节点`[]🇹🇼 台湾节点`[]🇸🇬 狮城节点`[]🇯🇵 日本节点`[]🇰🇷 韩国节点`[]📶 官方优选`[]☑️ 手动切换
 -custom_proxy_group=🎶 网易音乐`select`[]DIRECT`[]🚀 节点选择`[]♻️ 自动选择`(网易|音乐|解锁|Music|NetEase)
 -custom_proxy_group=🎯 全球直连`select`[]DIRECT`[]🚀 节点选择`[]♻️ 自动选择
-+custom_proxy_group=📲 电报消息`select`[]🚀 节点选择`[]⭐ 常用节点`[]🇭🇰 香港节点`[]🇹🇼 台湾节点`[]🇸🇬 狮城节点`[]🇯🇵 日本节点`[]🇺🇲 美国节点`[]🇰🇷 韩国节点`[]🇬🇧 英国节点`[]🇩🇪 德国节点`[]🇫🇷 法国节点`[]🇳🇱 荷兰节点`[]🇨🇦 加拿大节点`[]🇦🇺 澳大利亚节点`[]📶 官方优选`[]☑️ 手动切换`[]DIRECT`.*
-+custom_proxy_group=🤖 OpenAi`select`[]🚀 节点选择`[]⭐ 常用节点`[]🇭🇰 香港节点`[]🇹🇼 台湾节点`[]🇸🇬 狮城节点`[]🇯🇵 日本节点`[]🇺🇲 美国节点`[]🇰🇷 韩国节点`[]🇬🇧 英国节点`[]🇩🇪 德国节点`[]🇫🇷 法国节点`[]🇳🇱 荷兰节点`[]🇨🇦 加拿大节点`[]🇦🇺 澳大利亚节点`[]📶 官方优选`[]☑️ 手动切换`[]DIRECT`.*
-+custom_proxy_group=📹 油管视频`select`[]🚀 节点选择`[]⭐ 常用节点`[]🇭🇰 香港节点`[]🇹🇼 台湾节点`[]🇸🇬 狮城节点`[]🇯🇵 日本节点`[]🇺🇲 美国节点`[]🇰🇷 韩国节点`[]🇬🇧 英国节点`[]🇩🇪 德国节点`[]🇫🇷 法国节点`[]🇳🇱 荷兰节点`[]🇨🇦 加拿大节点`[]🇦🇺 澳大利亚节点`[]📶 官方优选`[]☑️ 手动切换`[]DIRECT`.*
-+custom_proxy_group=🎥 奈飞视频`select`[]🚀 节点选择`[]⭐ 常用节点`[]🇭🇰 香港节点`[]🇹🇼 台湾节点`[]🇸🇬 狮城节点`[]🇯🇵 日本节点`[]🇺🇲 美国节点`[]🇰🇷 韩国节点`[]🇬🇧 英国节点`[]🇩🇪 德国节点`[]🇫🇷 法国节点`[]🇳🇱 荷兰节点`[]🇨🇦 加拿大节点`[]🇦🇺 澳大利亚节点`[]📶 官方优选`[]☑️ 手动切换`[]DIRECT`.*
-+custom_proxy_group=📺 巴哈姆特`select`[]🇹🇼 台湾节点`[]⭐ 常用节点`[]🚀 节点选择`[]🇭🇰 香港节点`[]🇸🇬 狮城节点`[]🇯🇵 日本节点`[]🇺🇲 美国节点`[]🇰🇷 韩国节点`[]🇬🇧 英国节点`[]🇩🇪 德国节点`[]🇫🇷 法国节点`[]🇳🇱 荷兰节点`[]🇨🇦 加拿大节点`[]🇦🇺 澳大利亚节点`[]📶 官方优选`[]☑️ 手动切换`[]DIRECT`.*
-+custom_proxy_group=📺 哔哩哔哩`select`[]🎯 全球直连`[]⭐ 常用节点`[]🇹🇼 台湾节点`[]🇭🇰 香港节点`[]🚀 节点选择`[]🇸🇬 狮城节点`[]🇯🇵 日本节点`[]🇺🇲 美国节点`[]🇰🇷 韩国节点`[]🇬🇧 英国节点`[]🇩🇪 德国节点`[]🇫🇷 法国节点`[]🇳🇱 荷兰节点`[]🇨🇦 加拿大节点`[]🇦🇺 澳大利亚节点`[]☑️ 手动切换`[]DIRECT`.*
-+custom_proxy_group=🌍 国外媒体`select`[]🚀 节点选择`[]⭐ 常用节点`[]🇭🇰 香港节点`[]🇹🇼 台湾节点`[]🇸🇬 狮城节点`[]🇯🇵 日本节点`[]🇺🇲 美国节点`[]🇰🇷 韩国节点`[]🇬🇧 英国节点`[]🇩🇪 德国节点`[]🇫🇷 法国节点`[]🇳🇱 荷兰节点`[]🇨🇦 加拿大节点`[]🇦🇺 澳大利亚节点`[]📶 官方优选`[]☑️ 手动切换`[]DIRECT`.*
-+custom_proxy_group=🌏 国内媒体`select`[]DIRECT`[]⭐ 常用节点`[]🇭🇰 香港节点`[]🇹🇼 台湾节点`[]🇸🇬 狮城节点`[]🇯🇵 日本节点`[]🇺🇲 美国节点`[]🇰🇷 韩国节点`[]🇬🇧 英国节点`[]🇩🇪 德国节点`[]🇫🇷 法国节点`[]🇳🇱 荷兰节点`[]🇨🇦 加拿大节点`[]🇦🇺 澳大利亚节点`[]🚀 节点选择`[]☑️ 手动切换`.*
-+custom_proxy_group=📢 谷歌FCM`select`[]DIRECT`[]⭐ 常用节点`[]🚀 节点选择`[]🇭🇰 香港节点`[]🇹🇼 台湾节点`[]🇸🇬 狮城节点`[]🇯🇵 日本节点`[]🇺🇲 美国节点`[]🇰🇷 韩国节点`[]🇬🇧 英国节点`[]🇩🇪 德国节点`[]🇫🇷 法国节点`[]🇳🇱 荷兰节点`[]🇨🇦 加拿大节点`[]🇦🇺 澳大利亚节点`[]📶 官方优选`[]☑️ 手动切换`.*
-+custom_proxy_group=Ⓜ️ 微软Bing`select`[]DIRECT`[]⭐ 常用节点`[]🚀 节点选择`[]🇭🇰 香港节点`[]🇹🇼 台湾节点`[]🇸🇬 狮城节点`[]🇯🇵 日本节点`[]🇺🇲 美国节点`[]🇰🇷 韩国节点`[]🇬🇧 英国节点`[]🇩🇪 德国节点`[]🇫🇷 法国节点`[]🇳🇱 荷兰节点`[]🇨🇦 加拿大节点`[]🇦🇺 澳大利亚节点`[]📶 官方优选`[]☑️ 手动切换`.*
-+custom_proxy_group=Ⓜ️ 微软云盘`select`[]DIRECT`[]⭐ 常用节点`[]🚀 节点选择`[]🇭🇰 香港节点`[]🇹🇼 台湾节点`[]🇸🇬 狮城节点`[]🇯🇵 日本节点`[]🇺🇲 美国节点`[]🇰🇷 韩国节点`[]🇬🇧 英国节点`[]🇩🇪 德国节点`[]🇫🇷 法国节点`[]🇳🇱 荷兰节点`[]🇨🇦 加拿大节点`[]🇦🇺 澳大利亚节点`[]📶 官方优选`[]☑️ 手动切换`.*
-+custom_proxy_group=Ⓜ️ 微软服务`select`[]DIRECT`[]⭐ 常用节点`[]🚀 节点选择`[]🇭🇰 香港节点`[]🇹🇼 台湾节点`[]🇸🇬 狮城节点`[]🇯🇵 日本节点`[]🇺🇲 美国节点`[]🇰🇷 韩国节点`[]🇬🇧 英国节点`[]🇩🇪 德国节点`[]🇫🇷 法国节点`[]🇳🇱 荷兰节点`[]🇨🇦 加拿大节点`[]🇦🇺 澳大利亚节点`[]📶 官方优选`[]☑️ 手动切换`.*
-+custom_proxy_group=🍎 苹果服务`select`[]DIRECT`[]⭐ 常用节点`[]🚀 节点选择`[]🇭🇰 香港节点`[]🇹🇼 台湾节点`[]🇸🇬 狮城节点`[]🇯🇵 日本节点`[]🇺🇲 美国节点`[]🇰🇷 韩国节点`[]🇬🇧 英国节点`[]🇩🇪 德国节点`[]🇫🇷 法国节点`[]🇳🇱 荷兰节点`[]🇨🇦 加拿大节点`[]🇦🇺 澳大利亚节点`[]📶 官方优选`[]☑️ 手动切换`.*
-+custom_proxy_group=🎮 游戏平台`select`[]DIRECT`[]⭐ 常用节点`[]🚀 节点选择`[]🇭🇰 香港节点`[]🇹🇼 台湾节点`[]🇸🇬 狮城节点`[]🇯🇵 日本节点`[]🇺🇲 美国节点`[]🇰🇷 韩国节点`[]🇬🇧 英国节点`[]🇩🇪 德国节点`[]🇫🇷 法国节点`[]🇳🇱 荷兰节点`[]🇨🇦 加拿大节点`[]🇦🇺 澳大利亚节点`[]📶 官方优选`[]☑️ 手动切换`.*
-+custom_proxy_group=🎶 网易音乐`select`[]DIRECT`[]⭐ 常用节点`[]🚀 节点选择`[]🇭🇰 香港节点`[]🇹🇼 台湾节点`[]🇸🇬 狮城节点`[]🇯🇵 日本节点`[]🇺🇲 美国节点`[]🇰🇷 韩国节点`[]🇬🇧 英国节点`[]🇩🇪 德国节点`[]🇫🇷 法国节点`[]🇳🇱 荷兰节点`[]🇨🇦 加拿大节点`[]🇦🇺 澳大利亚节点`[]☑️ 手动切换`.*
-+custom_proxy_group=🎯 全球直连`select`[]DIRECT`[]🚀 节点选择
  custom_proxy_group=🛑 广告拦截`select`[]REJECT`[]DIRECT
  custom_proxy_group=🍃 应用净化`select`[]REJECT`[]DIRECT
--custom_proxy_group=🐟 漏网之鱼`select`[]🚀 节点选择`[]♻️ 自动选择`[]DIRECT`[]🇭🇰 香港节点`[]🇹🇼 台湾节点`[]🇸🇬 狮城节点`[]🇯🇵 日本节点`[]🇺🇲 美国节点`[]🇰🇷 韩国节点`[]📶 官方优选`[]☑️ 手动切换
--custom_proxy_group=🇭🇰 香港节点`url-test`(港|HK|hk|Hong Kong|HongKong|hongkong|HKG)`http://www.gstatic.com/generate_204`300,,50
--custom_proxy_group=🇯🇵 日本节点`url-test`(日本|川日|东京|大阪|泉日|埼玉|沪日|深日|[^-]日|JP|Japan|Tokyo|NRT|KIX)`http://www.gstatic.com/generate_204`300,,50
--custom_proxy_group=🇺🇲 美国节点`url-test`(美|波特兰|达拉斯|俄勒冈|凤凰城|费利蒙|硅谷|拉斯维加斯|洛杉矶|圣何塞|圣克拉拉|西雅图|芝加哥|US|United States|ATL|BUF|DFW|EWR|IAD|LAX|MCI|MIA|ORD|PHX|PDX|SEA|SJC)`http://www.gstatic.com/generate_204`300,,150
--custom_proxy_group=🇹🇼 台湾节点`url-test`(台|新北|彰化|TW|Taiwan|TPE|KHH)`http://www.gstatic.com/generate_204`300,,50
--custom_proxy_group=🇸🇬 狮城节点`url-test`(新加坡|坡|狮城|SG|Singapore|SIN)`http://www.gstatic.com/generate_204`300,,50
--custom_proxy_group=🇰🇷 韩国节点`url-test`(KR|Korea|KOR|Seoul|首尔|春川|韩|韓|ICN)`http://www.gstatic.com/generate_204`300,,50
 +custom_proxy_group=🐟 漏网之鱼`select`[]🚀 节点选择`[]⭐ 常用节点`[]DIRECT`[]🇭🇰 香港节点`[]🇹🇼 台湾节点`[]🇸🇬 狮城节点`[]🇯🇵 日本节点`[]🇺🇲 美国节点`[]🇰🇷 韩国节点`[]🇬🇧 英国节点`[]🇩🇪 德国节点`[]🇫🇷 法国节点`[]🇳🇱 荷兰节点`[]🇨🇦 加拿大节点`[]🇦🇺 澳大利亚节点`[]📶 官方优选`[]☑️ 手动切换`.*
 +
 +; ===== MANUAL COUNTRY GROUPS BEGIN =====
@@ -110,6 +113,13 @@
 +custom_proxy_group=Bybit EU`select`[]🇩🇪 德国节点`[]⭐ 常用节点`[]🇭🇰 香港节点`[]🇹🇼 台湾节点`[]🇸🇬 狮城节点`[]🇺🇲 美国节点`[]🇰🇷 韩国节点`[]🇬🇧 英国节点`[]🇯🇵 日本节点`[]🇫🇷 法国节点`[]🇳🇱 荷兰节点`[]🇨🇦 加拿大节点`[]🇦🇺 澳大利亚节点`[]🚀 节点选择`[]DIRECT`.*
 +custom_proxy_group=Cloudflare 验证`select`[]🚀 节点选择`[]DIRECT`[]⭐ 常用节点`[]🇭🇰 香港节点`[]🇹🇼 台湾节点`[]🇸🇬 狮城节点`[]🇯🇵 日本节点`[]🇺🇲 美国节点`[]🇰🇷 韩国节点`[]🇬🇧 英国节点`[]🇩🇪 德国节点`[]🇫🇷 法国节点`[]🇳🇱 荷兰节点`[]🇨🇦 加拿大节点`[]🇦🇺 澳大利亚节点`[]☑️ 手动切换`.*
 +; ===== CUSTOM GROUPS END =====
+-custom_proxy_group=🐟 漏网之鱼`select`[]🚀 节点选择`[]♻️ 自动选择`[]DIRECT`[]🇭🇰 香港节点`[]🇹🇼 台湾节点`[]🇸🇬 狮城节点`[]🇯🇵 日本节点`[]🇺🇲 美国节点`[]🇰🇷 韩国节点`[]📶 官方优选`[]☑️ 手动切换
+-custom_proxy_group=🇭🇰 香港节点`url-test`(港|HK|hk|Hong Kong|HongKong|hongkong|HKG)`http://www.gstatic.com/generate_204`300,,50
+-custom_proxy_group=🇯🇵 日本节点`url-test`(日本|川日|东京|大阪|泉日|埼玉|沪日|深日|[^-]日|JP|Japan|Tokyo|NRT|KIX)`http://www.gstatic.com/generate_204`300,,50
+-custom_proxy_group=🇺🇲 美国节点`url-test`(美|波特兰|达拉斯|俄勒冈|凤凰城|费利蒙|硅谷|拉斯维加斯|洛杉矶|圣何塞|圣克拉拉|西雅图|芝加哥|US|United States|ATL|BUF|DFW|EWR|IAD|LAX|MCI|MIA|ORD|PHX|PDX|SEA|SJC)`http://www.gstatic.com/generate_204`300,,150
+-custom_proxy_group=🇹🇼 台湾节点`url-test`(台|新北|彰化|TW|Taiwan|TPE|KHH)`http://www.gstatic.com/generate_204`300,,50
+-custom_proxy_group=🇸🇬 狮城节点`url-test`(新加坡|坡|狮城|SG|Singapore|SIN)`http://www.gstatic.com/generate_204`300,,50
+-custom_proxy_group=🇰🇷 韩国节点`url-test`(KR|Korea|KOR|Seoul|首尔|春川|韩|韓|ICN)`http://www.gstatic.com/generate_204`300,,50
  ;设置分组标志位
  
  enable_rule_generator=true
